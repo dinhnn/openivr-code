@@ -1,0 +1,50 @@
+ -----
+ Architecture
+ -----
+ The openIVR Team
+ -----
+
+
+OpenIVR Architecture
+
+
+
+  The figure below shows the openIVR stack.  It is composed of two servers, the Cairo MRCPv2 server and the openIVR speech application server.  Cairo is a mrcpv2 compliant speech server providing access to recognzier and sythesizer resources.  It integrates with sphinx4 speech recognition engine and freetts speech sythesizer.  Higher up the stack is the zanzibar speech application server. Zanzibar integrates with telephony platforms, manages caller sessions and runs applications on behalf of the caller.
+
+  Zanzibar integrates with the asterisk PBX via SIP and RTP protocols.  Simply use the dial application in your asterisk dialplan to  connect to the speechforge stack and initiate a sppech application.  The stack can integarte with other telephony platforms that support thoses same standards.  Non-standard platforms will require integration adapters.  Speechforge fosters the development of these adapters as needed as opensoruce speechforge projects so they can be shared with the community.
+
+  The asterisk integration kit helps you integrate your asterisk installation with the speechforge stack.  Speechforge will foster the development of other integration kits as they are needed as opensource speechforge projects so they can be shared with the community.
+
+[images/ArchitectureHighLevel.png]
+
+
+
+   * {{{architecture.html}More about the Speechforge Architecture}} 
+
+   * {{{sequence.html}Typical Sequence of Events when receiving a call}}
+
+
+   []
+
+
+*OpenIVR Components
+   
+   The platform is a distribution of multiple open source speech projects assembled as components.  These  components include.
+   
+   * Zanzibar Speech Application Server
+
+   * SpeechForge Cairo MRCPv2 Speech Server
+
+   * SpeechForge MRCP4J 
+
+   * Jvoicexml voiceXML interpreter
+
+   * CMU Sphinx4
+
+   * FreeTTS
+
+   * Asterisk-java
+
+   * NIST JAIN-SIP
+
+   

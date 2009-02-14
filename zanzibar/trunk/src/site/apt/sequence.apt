@@ -1,0 +1,38 @@
+                       -----
+                    Architecture
+                       -----
+                  SpeechForge Project Teams
+                       -----
+
+
+Sequence of Events
+
+   This a typical sequence of events establishing a session for a voicexml application.
+
+   [[1]] A call is placed to a PBX.  (Sequence Diagram, Step 1).
+
+   [[2]] PBX receives call and routes the call to Zanzibar Server.  It sends a SIP invite message to establish a session with the Zanzibar server.  (Sequence Diagram, Step 2). 
+
+   [[3]] The Zanzibar server retrieves the voiceXML document corresponding to the session parameters.  (Sequence Diagram, Step 3).
+
+   [[4]] The Zanzibar server uses SIP/SDP (as specified in the MRCPv2 spec) to establish a session with the resources needed for the call.  (Sequence Diagram, Step 4).
+
+   [[5-9]] Cairo server allocates resources and sets up control (MRCPv2) and media channels (RTP) for the call and sends SIP invite response back to the Zanzibar server with the results of the channel allocation.  (Sequence Diagram, Steps 5 thru 9).
+
+   [[10]] Zanzibar server sends SIP invite response with RTP media channel information back to the PBX.  (Sequence Diagram, Step 10).
+
+   [[11-14]] The PBX establishes the RTP channels to and from cairo server.  (Sequence Diagram, Steps 11 thru 14).
+
+   [[15-24]] Zanzibar server interprets the voiceXML and makes MRCPv2 calls to cairo as needed to execute the app.  Note that speech is being streamed directly between the PBX/phone and the cairo server.  (Sequence Diagram, Steps 15 thru 24).
+
+   [[25-29]] End of session occurs.  Zanzibar Server issues SIP Bye message to Cairo server so that it can release resources.  Also issues SIP Bye to pbx to end session with caller.  (Sequence Diagram, Step 25 thru 29).
+
+   []
+
+   The following figure shows the sequence of events in some detailed in the form of a sequence diagram.
+
+[images/SessionEstablishment.jpg] 
+
+  Sequence Diagram showing typical interaction between system components
+
+    See {{{src/CallHandler.java}java example}} for details

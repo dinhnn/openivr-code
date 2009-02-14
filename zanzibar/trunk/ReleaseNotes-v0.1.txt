@@ -1,0 +1,19 @@
+Release Notes for Zanzibar v0.1:
+================================
+Zanzibar is a speech application server.  It integrates with VOIP telephony
+servers (such as a PBX) to receive call.  In addition it integrates with MRCPv2 
+Servers  to make use of speech resources (such as recognizers and speech sythesizers).
+Speech applications can be defined in voicexml or they can be plain java programs that
+use MRCPv2 calls directly.
+
+This is the first release for the Zanzibar project.  This release provides
+support for basic speech synthesis and speech recognition functionality
+using Media Resource Control Protocol Version 2 (MRCPv2) for the control
+channel between the speech client and the speech resource and Real-time
+Transport Protocol (RTP) for streaming audio to and from the media
+sink/source.
+
+
+Zanzibar v0.1:
+---------------
+No prior release to compare with.

@@ -1,0 +1,336 @@
+                       -----
+                  Getting Started
+                       -----
+                  openIVR Project Team
+                       -----
+
+Getting Started
+
+  If you have not yet installed openIVR please see the {{{install.html}openIVR Installation Guide}} for instructions on downloading and installing the openIVR software.
+
+  Once openIVR is successfully installed you can follow the instructions below to launch the openIVR server processes and run the demos.
+
+Starting the openIVR Servers
+
+
+*Server Architecture
+
+  OpenIVR is composed of two servers:  the Zanzibar speech application server and the Cairo MRCPv2 server.  These two servers are composed of a number of separate components, each performing a specific function and running in its own process space (i.e. JVM).
+
+*----------+----------------------+------------------------------------------------------------+
+| Server   | Component            | Function                                                   |
+*----------+----------------------+------------------------------------------------------------+
+| MRPCv2   | Resource Server      | Manages client connections with resources (only one of     |
+| Server   |                      | these should be running per Cairo deployment).             |
+*----------+----------------------+------------------------------------------------------------+
+| MRCPv2   | Transmitter Resource | Responsible for all functions that generate audio data     |
+| Server   |                      | to be streamed to the client (e.g. speech synthesis).      |
+*----------+----------------------+------------------------------------------------------------+
+| MRCPv2   | Receiver Resource    | Responsible for all functions that process audio data      |
+| Server   |                      | streamed from the client (e.g. speech recognition).        |
+*----------+----------------------+------------------------------------------------------------+
+| Speech   | Speech App Server    | Responsible for communicating with the telephony platform  |
+| Server   |                      | maintaining sessions, running applications for the caller. |
+*----------+----------------------+------------------------------------------------------------+
+
+  OpenIVR can be started up in a variety of configurations depending upon the capabilities required of the individual deployment.  
+Out of the box, openIVR is confgured to run in two ways:
+  
+  * With one instance of each component type: a Resource Server, a Receiver Resource, a Transmitter Resource and a speech application server.
+  
+  * With all four components running in a single process (allinone.bat)
+
+
+*Launching Server Processes
+
+  Server processes are started by passing appropriate parameters to the launch.bat script in the bin subdirectories of your installation.  
+However the launch.bat script should not be invoked directly.  Instead batch files are supplied for each of the server processes present in the default configuration.
+
+  There are two configurations provided with the download.  To start the speech application server in one of these modes:
+
+  Use (<<<asteriskConnector.bat/sh>>>) to integrate with an asterisk PBX (or any other SIP, RTP based pbx). See {{{aik}Asterisk Integration Kit}} for information on howto configure asterisk.
+
+  Use (<<<demoConnector.bat/sh>>>) to run the demo mode with a sip phone.
+
+  As noted above, you can run all components in a single JVM (i.e. running the Cairo MRCPv2 Server in the same process as the speech server, execute the allinone.bat (or allinone.sh) file.  This script is configured out of the box to run in demo mode.
+
+
+  <<Launching the MRCPv2 Server>>
+  
+  If you are running the speech application server in its own JVM you will need an MRCPv2 Server.  
+The Cairo MRCPv2 Server is included with openIVR.  To launch the MRCPv2 Server processes:
+
+  The resource server (rserver.bat) should always be started first since the resources must register with the resource server when 
+they become available.  Once the resource server has completed initialization you will see a message on the console that says "Server 
+and registry bound and waiting..."
+ 
+  Then the individual resources (transmitter1.bat and receiver1.bat) can be started in any order.  When ready, each of the resources 
+will display a "Resource bound and waiting..." message.
+  
+  Once all three server processes have completed initialization and display a waiting message, the server cluster is ready to accept 
+MRCPv2 client requests.
+
+  (See the Cairo web site for more information on configuring Cairo MRCPv2 Server.)
+
+*Configuring the Server
+
+   The Speech Server is configured via a spring configuration file that is passed in on the command line. 
+  
+   <<Configuring the sip service>>  The sip services is used for both receiving incoming calls and setting up MRCPv2 channels.  Below is an example of 
+the SipService configuration.  This is where you specify where to find the MRCPv2 Server (cairoSipHostName and cairoSipPort).  Also specify the sip 
+transport (UDP or TCP).  Note that the same transport is used for both mrcp server and for incoming calls (pbx).  This is where you configure the port 
+that the service uses for incoming calls and requests from the mrcp server  (the port parameter).
+
+   No changes should be required if you are running  zanzibar and cairo on the same machine (be careful of sip port conflicts).
+
+------------------
+<bean id="sipService" class="org.speechforge.modules.common.sip.SipServer"
+	init-method="startup" destroy-method="shutdown">
+	<property name="dialogService"><ref bean="dialogService"/></property>
+	<property name="mySipAddress">
+	   <value>sip:cairogate@speechforge.org</value>
+	</property>
+	<property name="stackName">
+		<value>Agi Sip Stack</value>
+	</property>
+	<property name="port">
+	    <value>5090</value>
+	</property>
+	<property name="transport">
+	    <value>UDP</value>
+	</property>
+	<property name="cairoSipAddress">
+	    <value>sip:cairo@speechforge.org</value>
+	</property>
+	<property name="cairoSipHostName">
+	    <value>localhost</value>
+	</property>
+	<property name="cairoSipPort">
+	    <value>5050</value>
+	</property>
+</bean>
+-----------------
+
+
+   <<Configuring the Dialog Service>>  There are two dialogServices available with this release the Application by number service and the application by
+sip header service.  the Application by number service is used in the demo configuration.  It selects an application based on the number dialed.
+The application by sip header service is used in the asterisk integration mode.  This can be used with an asterisk dialplan.  Where you can select
+an application in the dialplan and then specify the application to be run in a custom sip header.  See integration with Asterisk dialplan section 
+below for more details.
+	
+-----------------
+<bean id="dialogService"
+	class="org.speechforge.zanzibar.speechlet.ApplicationByNumberService"
+	init-method="startup" destroy-method="shutdown">
+</bean>
+-----------------
+  
+  OR
+  
+-----------------
+<bean id="dialogService"
+	class="org.speechforge.zanzibar.speechlet.ApplicationBySipHeaderService"
+	init-method="startup" destroy-method="shutdown">
+</bean>
+-----------------
+  
+  
+   When using the application by number dialog service.  You must configure you Speech applications with the beanid set to the "number"  
+with an underscore prefix.  For instance if you want to run the Parrot demo when someone dials 1000 extension configure the demo as follows.
+
+-----------------
+<bean id="_1000"
+	class="org.speechforge.apps.demos.Parrot"
+	singleton="false">
+	<property name="prompt">
+		<value>You can start speaking any time.  Would you like to hear the weather,
+			    get sports news or hear a stock quote?  Say goodbye to exit.</value>
+	</property>
+	<property name="grammar">
+		<value>file:../demo/grammar/example-loop.gram</value>
+	</property>
+</bean>
+-----------------
+
+
+Running the Examples (in Demo Mode)
+
+*Prerequisites
+
+  You will need a sip softphone like Xlite to access the demos. To configur Xlite:
+
+---
+domain=localhost
+uncheck register with domain and receive incoming calls
+check proxy with your address and port of the machine running zanzibar sip service
+ip address use localhost
+---
+
+   Since the demos play synthesized speech and/or perform speech recognition on microphone input (via the softphone),  you will require (preferably high quality) microphone and speakers attached to the system running the sip phone.
+
+   If you are running the voicexml demos, you may need  webserver (if you use http urls to your grammar, prerecorded prompt and vxml files).  You should copy the voicxml directory (which contains the vxml and grammar files) to a web server accessable by the zanzibar server and update the xml to have the proper urls.
+
+   Start the server using the democontext.xml configuration (run the demoConnector.bat script)
+
+   The default configuration file, will provide the following demo demos:
+   
+   
+*-------------+-------------------+--------------------------------------------------------------------------------------------------------------+
+| <Number>    | <Client>          | <Description>
+*-------------+-------------------+--------------------------------------------------------------------------------------------------------------+
+| <<<1000>>>  |<<<parrot>>>       | Application that plays a TTS prompt while performing speech recognition on microphone input.  Prompt playback is cancelled as soon as start of speech is detected. Recognized utterances are read back to the user using TTS until the phrase <"quit"> or <"exit"> is recognized.)
+*---------------------------------+--------------------------------------------------------------------------------------------------------------+
+| <<<2000>>>  |<<<DTMF Demo>>>    | DTMF demo   
+*---------------------------------+--------------------------------------------------------------------------------------------------------------+
+| <<<3000>>>  |<<<jukebox>>>      | Jukebox demo
+*---------------------------------+--------------------------------------------------------------------------------------------------------------+
+| <<<4000>>>  |<<<call-Xfer>>>    | Call Transfer Demo  (Note: Call Transfer  only works in asterisk mode, needs a pbx for call routing)
+*---------------------------------+--------------------------------------------------------------------------------------------------------------+
+| <<<5000>>>  |<<<vxml-hello>>>   | Hello world voice xml demo (synthesis only)
+*---------------------------------+--------------------------------------------------------------------------------------------------------------+
+| <<<6000>>>  |<<<vxml-simple>>>  | Simple yes/no voice xml demo.
+*---------------------------------+--------------------------------------------------------------------------------------------------------------+
+| <<<7000>>>  |<<<vxml-parrot>>>  | A voicexml version of the parrot demo.
+*---------------------------------+--------------------------------------------------------------------------------------------------------------+
+
+
+* Example Grammar
+
+  The parrot demos use the grammar file <<<demo/grammar/example-loop.gram>>>.   This grammar is in Java Speech Grammar Format (JSGF).  If you are familiar with JSGF you can examine the grammar file to find out what some valid utterances are that the demos will recognize.  Here are some examples of valid utterances from the <<<example.gram>>> grammar file:
+
+    * <"I would like sports news.">
+
+    * <"Get me the weather.">
+
+    * <"I would like to hear a stock quote.">
+ 
+    * <"Exit.">
+
+    * <"Quit.">
+
+
+*Configuring the demos
+
+   The demos are basically mrcp clients that are either programmed against the cairo client api or that are voicexml documents interpreted by the jvociexml interpreter.  The JvoiceXMl interpreter, in turn, uses the cairo-client api to do get and use speech resource in the MRCPv2 servers.
+
+   The demos can be configured for your environment as follows.  (Note these rules apply in both demo and asterisk mode.)
+
+   For Voice XML demos, copy the /vxml directory to a web server directory if you want to use http (you can also use a file:// url).  Then check your config file (democontext.xml).
+
+   Modify vxml file and grammar file urls in the config files according to where you copied the /vxml directory.  For example, the doc hello.vxml is expected to be found on in the vxml directory of web server running on the localhost (local to the zanzibar server) on port 8080.
+ 
+---
+<bean id="HelloWorld"
+	class="org.speechforge.zanzibar.jvoicexml.impl.VoiceXmlSessionProcessor"
+	singleton="false">
+	<property name="appUrl">
+		<value>http://localhost:8080/voicexml/hello.vxml</value>
+	</property>
+</bean>
+---
+
+   For the java programs, grammar and prompt files are specified in the bean configuration.  The configuration should not need any changes, because those demos look for resources in a directory relative to the installation.  The exception is for the Jukebox demo -- becasue  we can not include any music in this distribution, so you will have to use your own audio files.
+
+---
+<bean id="Jukebox"
+	class="org.speechforge.apps.demos.Jukebox"
+	singleton="false">
+	<property name="firstPrompt">
+		<value>Hi.  Welcome to the speechforge Jukebox.  What would you like to hear Bob Dylan, Radiohead, Amy Winehouse, Rolling Stones</value>
+	</property>
+	<property name="laterPrompts">
+		<value>Welcome back.  What would you like to hear next, Bob Dylan, Radiohead, Amy Winehouse, Rolling Stones</value>
+	</property>
+	<property name="greetingGrammar">
+		<value>file:../demo/grammar/jukeboxWelcome.gram</value>
+	</property>
+	<property name="playGrammar">
+		<value>file:../demo/grammar/jukeboxPlay.gram</value>
+	</property>
+	<property name="dylan">
+		<value>file:../../audio/jukebox/03RollinandTumblin.au</value>
+	</property>
+	<property name="amy">
+		<value>file:../../audio/jukebox/11YouKnowImNoGoodRemix.au</value>
+	</property>
+	<property name="stones"> 
+		<value>file:../../audio/jukebox/01FancyManBlues.au</value>
+	</property>
+	<property name="radiohead"> 
+		<value>file:../../audio/jukebox/08HouseofCards.au</value>
+	</property>	
+</bean>    
+---
+
+
+Running in Asterisk Mode
+
+
+   Start the server using the context.xml configuration (run the asteriskConnector.bat (or .sh) script)
+
+*Dialplan Integration
+
+  To transfer a call to a java speech application in the zanzibar server add the following lines in your dialplan in the appropriate place. 
+  Note the two sip extenion headers: x-channel amd x-application.  The channel passed to zanzibar in the x-channel header can be used later to redirect 
+  calls back to asterisk and on to a new number.  The x-application header tells zanzibar which application to run on the callers behalf.    This example 
+  runs a java appliction, org.speechforge.apps.demos.Parrot.  The class specified here must extend the speechlet abstract class (or implement the SessionProcessor
+  interrace).
+
+
+---
+exten => 1,n,SIPAddHeader(x-channel:${CHANNEL})
+exten => 1,n,SIPAddHeader(x-application:beanId|Parrot)
+exten => 1,n,Dial(SIP/Zanzibar)
+---
+   
+  The zanzibar platform also includes an voicexml intepreter.   If you wish to run a voicexml application, use a Sip x-application header should look like this:
+
+---
+exten => 1,n,SIPAddHeader("x-application:vxml|http://localhost:8080/hello.vxml")
+---
+   
+  Note that in gerneal, the content of the x-application is in the form:
+
+---
+type|applicationName
+
+where:  type is either "beanid" "classname" or "vxml"
+---
+
+   
+   If  type=beanid, the application name is the beanid id as configured in spring config file, if type= classname then application name is the fully qualified name of the java class that will run for the session else if  type = vxml then application name is the url of the vxml document.
+
+*Asterisk Manager Interface (AMI) Configuration
+
+  The platform uses  AMI to transfer calls to other extensions or phone numbers.  For this to work you must add this to the manager.conf file 
+  in your asterisk installation.  (Note that is is pretty insecure.  See asterisk documentation for information on how to secure an 
+  asterisk installation.)
+
+---
+secret=password
+permit=0.0.0.0/0.0.0.0
+read=system,call,log,verbose,agent,command,user
+write=system,call,log,verbose,agent,command,user
+---
+   
+   You must also configure Zanzibar so that it knows where asterisk manager is listening.  This is done in the context.xml file
+
+
+---
+<bean id="callControl" class="org.speechforge.zanzibar.asterisk.CallControl"
+	init-method="startup" destroy-method="shutdown"> 
+	<property name="address">
+		<value>192.168.0.101</value>
+	</property>
+	<property name="name">
+		<value>manager</value>
+	</property>
+	<property name="password">
+		<value>password</value>
+	</property>
+	<property name="disabled">
+		<value>false</value>
+	</property>
+</bean>
+---
+
