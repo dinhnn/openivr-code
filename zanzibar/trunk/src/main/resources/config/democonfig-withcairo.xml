@@ -19,6 +19,12 @@
 		<property name="transmitterResourceName">
 		    <value>transmitter1</value>
 		</property>
+		<property name="sipPort">
+		    <value>5050</value>
+		</property>
+		<property name="sipTransport">
+		    <value>UDP</value>
+		</property>
 	</bean>
         
 	<bean id="sipService" class="org.speechforge.zanzibar.sip.SipServer"
@@ -40,7 +46,7 @@
 				    <value>sip:cairo@speechforge.org</value>
 		</property>
 		<property name="cairoSipHostName">
-				    <value>localhost</value>
+				    <value>192.168.0.100</value>
 		</property>
 		<property name="cairoSipPort">
 				    <value>5050</value>
@@ -76,7 +82,7 @@
 		    <value>You can start speaking any time.  Would you like to hear the weather, get sports news or hear a stock quote?  Say goodbye to exit.</value>
 		</property>
 		<property name="grammar">
-	        <value>file:../demo/grammar/example-loop.gram</value>
+	        <value>file:../../demo/grammar/example-loop.gram</value>
 		</property>
 	</bean>	
 	
@@ -88,7 +94,7 @@
 		    <value>You can press any four digit extension on your keypad.  Say goodbye to exit.</value>
 		</property>
 		<property name="grammar">
-	        <value>file:../demo/grammar/demo-dtmf.gram</value>
+	        <value>file:../../demo/grammar/demo-dtmf.gram</value>
 		</property>
 	</bean>
 	
@@ -102,22 +108,22 @@
 	        <value>Welcome back.  What would you like to hear next, Bob Dylan, Radiohead, Amy Winehouse or Rolling Stones</value>
 		</property>
 	    <property name="greetingGrammar">
-	        <value>file:../demo/grammar/jukeboxWelcome.gram</value>
+	        <value>file:../../demo/grammar/jukeboxWelcome.gram</value>
 		</property>
 	    <property name="playGrammar">
-	        <value>file:../demo/grammar/jukeboxPlay.gram</value>
+	        <value>file:../../demo/grammar/jukeboxPlay.gram</value>
 		</property>
 		<property name="dylan">
-	        <value>file:../../audio/jukebox/03RollinandTumblin.au</value>
+	        <value>file:../../../audio/jukebox/03RollinandTumblin.au</value>
 		</property>
 		<property name="amy">
-	        <value>file:../../audio/jukebox/11YouKnowImNoGoodRemix.au</value>
+	        <value>file:../../../audio/jukebox/11YouKnowImNoGoodRemix.au</value>
 		</property>
 		<property name="stones">
-	        <value>file:../../audio/jukebox/01FancyManBlues.au</value>
+	        <value>file:../../../audio/jukebox/01FancyManBlues.au</value>
 		</property>
 		<property name="radiohead">
-	        <value>file:../../audio/jukebox/08HouseofCards.au</value>
+	        <value>file:../../../audio/jukebox/08HouseofCards.au</value>
 		</property>	   
 	</bean>
 	
@@ -132,7 +138,7 @@
 		    <value>Would you like to speak to Larry, Moe or Curly?  You can press any four digit extension on your keypad.  Say goodbye to exit.</value>
 		</property>
 		<property name="grammar">
-	        <value>file:../demo/grammar/callxfer-demo.gram</value>
+	        <value>file:../../demo/grammar/callxfer-demo.gram</value>
 		</property>
 		
 	</bean>	

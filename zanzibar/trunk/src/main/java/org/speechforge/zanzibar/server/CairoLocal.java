@@ -39,10 +39,19 @@ public class CairoLocal {
     ReceiverResource rimpl;
     TransmitterResource timpl;
     
-    //startup parmeters
-    String cairoConfig;// = "file:../config/cairo-config.xml";
-    String receiverResourceName;// = "receiver1";
-    String transmitterResourceName;// = "transmitter1";
+    //startup parmeters for the receiver
+    private String cairoConfig;// = "file:../config/cairo-config.xml";
+    private String receiverResourceName;// = "receiver1";
+    
+    
+    //Startup paramters for the 
+    private String transmitterResourceName;// = "transmitter1";
+    
+    
+    //startup parameters for resource manager
+    private int sipPort;
+    private String sipTransport ;
+    private String publicAddress;
 
 
     //TODO: When Spring is used to configure Cairo, this class can be removed.  Can just configure the 3 servers to startup individually.
@@ -82,9 +91,6 @@ public class CairoLocal {
     public void startRM() throws RemoteException, SipException {
     
         rr = new ResourceRegistryImpl();
-        int sipPort = 0;
-        String sipTransport = "udp";
-        String publicAddress=null;
         rs = new ResourceServerImpl(rr,  sipPort,  sipTransport,  publicAddress);
     
         Registry registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
@@ -180,5 +186,47 @@ public class CairoLocal {
      */
     public void setTransmitterResourceName(String transmitterResourceName) {
         this.transmitterResourceName = transmitterResourceName;
+    }
+
+	/**
+     * @return the publicAddress
+     */
+    public String getPublicAddress() {
+    	return publicAddress;
+    }
+
+	/**
+     * @param publicAddress the publicAddress to set
+     */
+    public void setPublicAddress(String publicAddress) {
+    	this.publicAddress = publicAddress;
+    }
+
+	/**
+     * @return the sipPort
+     */
+    public int getSipPort() {
+    	return sipPort;
+    }
+
+	/**
+     * @param sipPort the sipPort to set
+     */
+    public void setSipPort(int sipPort) {
+    	this.sipPort = sipPort;
+    }
+
+	/**
+     * @return the sipTransport
+     */
+    public String getSipTransport() {
+    	return sipTransport;
+    }
+
+	/**
+     * @param sipTransport the sipTransport to set
+     */
+    public void setSipTransport(String sipTransport) {
+    	this.sipTransport = sipTransport;
     }
 }
