@@ -11,14 +11,10 @@
      </layout>
   </appender>
 
-  <!-- Example: switch this priority value to "trace" to see each buffer transferred. -->
-  <category name="org.speechforge.cairo.util.sip">
+  <!-- Example: switch this priority value to "debug" to see each sip messages. -->
+  <category name="org.speechforge.cairo.sip">
     <priority value="info"/>
   </category>
-  <category name="org.speechforge.cairo.demo.util">
-    <priority value="info"/>
-  </category>
-
 
   <root>
     <priority value="info"/>

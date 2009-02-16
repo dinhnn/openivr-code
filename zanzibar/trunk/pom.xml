@@ -328,6 +328,14 @@
         <artifactId>spring</artifactId>
         <version>2.0</version>
      </dependency>
+     
+     <!-- TODO: cairo server should only need to be a runtime dependency -->
+     <dependency>
+      <groupId>org.speechforge</groupId>
+      <artifactId>cairo</artifactId>
+      <version>SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
 
     <!-- runtime scope dependencies -->
   
@@ -369,13 +377,6 @@
       <artifactId>stax-api</artifactId>
       <version>1.0</version>
       <scope>runtime</scope>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.speechforge</groupId>
-      <artifactId>cairo</artifactId>
-      <version>0.3</version>
-      <scope>compile</scope>
     </dependency>
     
     <!-- test scope dependencies -->

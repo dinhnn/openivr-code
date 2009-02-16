@@ -36,6 +36,9 @@
 	<bean id="dialogService" 
 	      class="org.speechforge.zanzibar.speechlet.ApplicationBySipHeaderService"
 		  init-method="startup" destroy-method="shutdown">
+		  <property name="instrumentation">
+				 <value>false</value>
+		  </property>
 	</bean>
 	
 	
