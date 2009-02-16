@@ -87,7 +87,6 @@ public interface SessionProcessor {
      */
     public SpeechletContext getContext();
     
-    
     /**
      * Sets the context.  This object is used to communicate with the speechlet container.
      * 
@@ -101,5 +100,16 @@ public interface SessionProcessor {
      * @return the session
      */
     public SipSession getSession();
+    
+	/**
+     * @return the instrumentation flag
+     */
+    public boolean isInstrumentation();
+
+	/**
+     * @param instrumentation a flag that enable insrumenation 
+     * (sending mrcp events in sip info headers)
+     */
+    public void setInstrumentation(boolean instrumentation);
 
 }

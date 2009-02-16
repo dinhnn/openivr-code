@@ -49,6 +49,8 @@ public class ApplicationBySipHeaderService implements SpeechletService {
     private  Map<String, SessionProcessor> dialogs;
     
     private SpeechletContext _context;
+
+    private boolean instrumentation;
     
     /**
      * Instantiates a new dialog service impl.
@@ -103,6 +105,9 @@ public class ApplicationBySipHeaderService implements SpeechletService {
         //setup the context (for speechlet to communicate back to container)
         //SpeechletContext c = new SpeechletContextImpl(this,dialog);
         //dialog.setContext(c);
+        
+        //turn on or off the instrumentation for this dialog
+        dialog.setInstrumentation(instrumentation);
         
         _logger.info("Starting a new "+context.getExternalSession().getApplicationName()+" speechlet with session id = "+ context.getExternalSession().getId());
         dialog.startup(context, app[1]);
@@ -178,6 +183,20 @@ public class ApplicationBySipHeaderService implements SpeechletService {
      */
     private synchronized SessionProcessor getDialog(String key) {
         return dialogs.get(key);
+    }
+
+	/**
+     * @return the instrumentation
+     */
+    public boolean isInstrumentation() {
+    	return instrumentation;
+    }
+
+	/**
+     * @param instrumentation the instrumentation to set
+     */
+    public void setInstrumentation(boolean instrumentation) {
+    	this.instrumentation = instrumentation;
     }
 
 }

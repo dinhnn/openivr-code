@@ -74,6 +74,8 @@ public abstract class Speechlet implements Runnable, SessionProcessor {
     protected boolean stopFlag = false;
     
     private SpeechletContext _context;
+    
+	boolean instrumentation = false;
  
     /**
      * Instantiates a new speechlet.
@@ -152,9 +154,11 @@ public abstract class Speechlet implements Runnable, SessionProcessor {
     public void run() {
         try {
         	
-        	//setup instrumentation hooks.  Send the mrcp events to the client (phone) via SIP INFO requests.
-        	_context.getSpeechClient().addListener(new InstrumentationListener()); 
-        	
+
+			if (instrumentation) {
+        		//setup instrumentation hooks.  Send the mrcp events to the client (phone) via SIP INFO requests.
+        		_context.getSpeechClient().addListener(new InstrumentationListener()); 
+        	}
         	
 	        runApplication();
         } catch (NoMediaControlChannelException e) {
@@ -168,5 +172,19 @@ public abstract class Speechlet implements Runnable, SessionProcessor {
      * @throws NoMediaControlChannelException 
      */
     protected abstract void  runApplication() throws NoMediaControlChannelException;
+
+	/**
+     * @return the instrumentation
+     */
+    public boolean isInstrumentation() {
+    	return instrumentation;
+    }
+
+	/**
+     * @param instrumentation the instrumentation to set
+     */
+    public void setInstrumentation(boolean instrumentation) {
+    	this.instrumentation = instrumentation;
+    }
     
 }

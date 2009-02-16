@@ -234,8 +234,8 @@ public class SipServer implements SessionListener {
                         MrcpFactory factory = MrcpFactory.newInstance();
                         MrcpProvider provider = factory.createProvider();
                         
-                        _logger.info("X: "+xmitterChannelId+" "+remoteHostAdress+" "+xmitterPort+" "+ protocol);
-                        _logger.info("R: "+receiverChannelId+" "+remoteHostAdress+" "+receiverPort+" "+protocol);
+                        _logger.debug("New Xmitter chan: "+xmitterChannelId+" "+remoteHostAdress+" "+xmitterPort+" "+ protocol);
+                        _logger.debug("New Receiver chan: "+receiverChannelId+" "+remoteHostAdress+" "+receiverPort+" "+protocol);
                         
                         MrcpChannel ttsChannel = provider.createChannel(xmitterChannelId, remoteHostAdress, xmitterPort, protocol);
                         MrcpChannel recogChannel = provider.createChannel(receiverChannelId, remoteHostAdress, receiverPort, protocol);

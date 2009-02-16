@@ -25,10 +25,7 @@ package org.speechforge.zanzibar.jvoicexml.impl;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import javax.sip.SipException;
-
-
 import org.apache.log4j.Logger;
 import org.jvoicexml.ImplementationPlatform;
 import org.jvoicexml.JVoiceXmlCore;
@@ -38,14 +35,13 @@ import org.mrcp4j.message.MrcpEvent;
 import org.speechforge.cairo.client.recog.RecognitionResult;
 import org.speechforge.cairo.sip.SipSession;
 import org.speechforge.zanzibar.server.SpeechletServerMain;
-import org.speechforge.zanzibar.speechlet.InvalidContextException;
 import org.speechforge.zanzibar.speechlet.SessionProcessor;
 import org.speechforge.zanzibar.speechlet.SpeechletContext;
 import org.speechforge.cairo.client.NoMediaControlChannelException;
 import org.speechforge.cairo.client.SpeechClient;
 import org.speechforge.cairo.client.SpeechEventListener;
 
-public class VoiceXmlSessionProcessor implements SessionProcessor, SpeechEventListener{
+public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, SpeechEventListener{
     private static Logger _logger = Logger.getLogger(VoiceXmlSessionProcessor.class);
     //private SpeechClient client;
     //private SipSession session;
@@ -53,7 +49,7 @@ public class VoiceXmlSessionProcessor implements SessionProcessor, SpeechEventLi
     boolean stopFlag = false;
     Session jvxmlSession = null;
     private SpeechletContext _context;
-    
+	boolean instrumentation = false;
     
     
     //private static Map<String, VoiceXmlSessionProcessor> dialogs = new Hashtable<String, VoiceXmlSessionProcessor>();
@@ -75,10 +71,8 @@ public class VoiceXmlSessionProcessor implements SessionProcessor, SpeechEventLi
         _context.getInternalSession().bye();
     }
 
-
-
     public void recognitionEventReceived(MrcpEvent event, RecognitionResult r) {
-        System.out.println("Recog result: "+r.getText());
+        _logger.debug("Recog result: "+r.getText());
         try {
             _context.getSpeechClient().playBlocking(false,r.getText());
         } catch (MrcpInvocationException e) {
@@ -93,43 +87,46 @@ public class VoiceXmlSessionProcessor implements SessionProcessor, SpeechEventLi
         } catch (NoMediaControlChannelException e) {
 	        // TODO Auto-generated catch block
 	        e.printStackTrace();
-        }
-        
+        }       
     }
 
     public void speechSynthEventReceived(MrcpEvent event) {
-        // TODO Auto-generated method stub
-        
+        // TODO Auto-generated method stub       
+    }
+    
+    
+    //TODO remove this.  
+	public void startup(SpeechletContext context, String applicationName) throws Exception {
+		
+		//overriding the application name in the startup method
+		this.appUrl = applicationName;
+        startup(context);   
     }
     
     public void startup(SpeechletContext context) throws Exception {
-        startup(context,this.appUrl);
+    	
+        _logger.debug("Starting up a speechlet...");
+        _context = context;
+        _context.init();
+        stopFlag = false;
+        (new Thread(this)).start();
     }
     
-    public void startup(SpeechletContext context, String applicationName) throws Exception {
-        
-        this.appUrl = applicationName;
-        this._context = context;
-        //this.session = session;
-        _context.init();
-        
-        //this.client = new SpeechClientImpl(session.getForward());
-        //context.getSpeechClient().setDefaultListener(this);
+    public void runApplication() throws Exception {
+
         stopFlag = false;        
 
         ImplementationPlatform platform = (ImplementationPlatform) SpeechletServerMain.context.getBean("implementationplatform");
         //TODO: Fix the need to cast to the implementation and call setMRcpClient.  Maybe another i/f?...
-        ((MrcpImplementationPlatform) platform).setMrcpClient(context.getSpeechClient());
+        ((MrcpImplementationPlatform) platform).setMrcpClient(_context.getSpeechClient());
         JVoiceXmlCore core = (JVoiceXmlCore) SpeechletServerMain.context.getBean("jvoicexmlcore");
         jvxmlSession = new org.jvoicexml.interpreter.JVoiceXmlSession(platform, core);      
   
         
         URI uri = null;
         try {
-            _logger.info("app name:"+applicationName);
-           //uri = new URI("http://localhost:8080/hello.vxml");
-           //uri = new URI("http://localhost:8080/test.vxml");
-           uri = new URI(applicationName);
+            _logger.info("app name:"+this.appUrl);
+           uri = new URI(this.appUrl);
         } catch ( URISyntaxException e ) {
            e.printStackTrace();
         }
@@ -139,17 +136,6 @@ public class VoiceXmlSessionProcessor implements SessionProcessor, SpeechEventLi
             //jvxmlSession.hangup();
         } catch (org.jvoicexml.event.JVoiceXMLEvent e ) {
            e.printStackTrace();
-        }    
-
-        
-        
-        try {
-            _logger.info("---->");
-            Thread.sleep(5000);
-            this.getContext().dialogCompleted();
-        } catch (InvalidContextException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
         
     }
@@ -186,5 +172,71 @@ public class VoiceXmlSessionProcessor implements SessionProcessor, SpeechEventLi
     public SipSession getSession() {
         return _context.getExternalSession();
     }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Runnable#run()
+     */
+    public void run() {
+        try {
+        	
+			if (instrumentation) {
+        	   //setup instrumentation hooks.  Send the mrcp events to the client (phone) via SIP INFO requests.
+        	   _context.getSpeechClient().addListener(new InstrumentationListener()); 
+			}
+			
+	        runApplication();
+        } catch (NoMediaControlChannelException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+        } catch (Exception e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+        }
+    }
 
+
+
+    public class InstrumentationListener implements SpeechEventListener {
+
+	    public void characterEventReceived(String arg0, EventType arg1) {
+		    // TODO Auto-generated method stub
+
+	    }
+
+	    public void recognitionEventReceived(MrcpEvent arg0, RecognitionResult arg1) {
+	    	SipSession sipSession = _context.getExternalSession();
+	    	try {
+	            sipSession.getAgent().sendInfoRequest(sipSession, "application", "mrcp-event", arg0.toString());
+            } catch (SipException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+            }
+	    }
+
+	    public void speechSynthEventReceived(MrcpEvent arg0) {
+	    	SipSession sipSession = _context.getExternalSession();
+	    	try {
+	            sipSession.getAgent().sendInfoRequest(sipSession, "application", "mrcp-event", arg0.toString());
+            } catch (SipException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+            }
+	    }
+
+    }
+
+	/**
+     * @return the instrumentation
+     */
+    public boolean isInstrumentation() {
+    	return instrumentation;
+    }
+
+	/**
+     * @param instrumentation the instrumentation to set
+     */
+    public void setInstrumentation(boolean instrumentation) {
+    	this.instrumentation = instrumentation;
+    }
+	
 }

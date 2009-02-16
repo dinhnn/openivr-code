@@ -50,6 +50,8 @@ public class ApplicationByNumberService implements SpeechletService {
     /** The dialogs. */
     private  Map<String, SessionProcessor> dialogs;
 
+    private boolean instrumentation;
+    
     
     /**
      * Instantiates a new application by number dialog service.
@@ -102,6 +104,9 @@ public class ApplicationByNumberService implements SpeechletService {
         if (dialog == null) 
             throw new Exception("No Application Found for "+aname);
         
+        //turn on or off the instrumentation for this dialog
+        dialog.setInstrumentation(instrumentation);
+        
         //Start the session/dialog/application
         dialog.startup(context);
         addDialog(dialog);
@@ -129,7 +134,7 @@ public class ApplicationByNumberService implements SpeechletService {
      * @param dialog the dialog
      */
     private synchronized void addDialog(SessionProcessor dialog) {
-        _logger.info("adding Dialog with sessionid: "+dialog.getId());
+        _logger.debug("adding Dialog with sessionid: "+dialog.getId());
         if (dialog.getSession() != null) {
             dialogs.put(dialog.getId(), dialog);
         } else {
@@ -184,6 +189,20 @@ public class ApplicationByNumberService implements SpeechletService {
         ((SpeechClientProvider)client).characterEventReceived(code);
       
         
+    }
+
+	/**
+     * @return the instrumentation
+     */
+    public boolean isInstrumentation() {
+    	return instrumentation;
+    }
+
+	/**
+     * @param instrumentation the instrumentation to set
+     */
+    public void setInstrumentation(boolean instrumentation) {
+    	this.instrumentation = instrumentation;
     }
 
 }
