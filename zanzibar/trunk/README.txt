@@ -1,15 +1,15 @@
 =====================================================
-Readme for Zanzibar Speech Application Server v${project.version}
+Readme for Zanzibar open IVR v${project.version}
 =====================================================
 
 Overview
 --------
-This is the first release of the Zanzibar Speech Application Server.  
+This is the first release of the Zanzibar Open Source IVR.  
 Zanzibar provides the framwork to deploy and run speech applications.   
 Zanzibar integrates with telphony platforms via SIP
 and RTP.  Speech applications use mrcpv2 to obtain and use speech 
 resources.  You can write speech applications in java using the MRCP4j library 
-or the higher level cairo-client speech library.  Zanzibar also provides the 
+or the cairo-client speech library.  Zanzibar also provides the 
 capability to deploy and run your speech applications using VoiceXML. 
 
 
@@ -25,13 +25,12 @@ General limitations of this release:
 * Multiple grammars are not supported
 * Queueing recogniton requests is not supported
 * DTMF signals in the rtp stream is not supported (although DTMF via SIP Info messages is supported)
+* Only .au files supported, Although wav files should be encoded in the proper format, this has not been successfully done within the framework.  This causes problems with the frame sizes in the rtp transmission.
 
 Prerequisites
 -------------
 
-1. Zanzibar requires an MRCPv2 compliant speech server (such as cairo-server) to be installed in a network accessible location.
-
-2. Zanzibar requires Java Runtime Environment (JRE) 5.0 or higher which can be downloaded here:
+Zanzibar requires Java Runtime Environment (JRE) 5.0 or higher which can be downloaded here:
 
   http://java.sun.com/javase/downloads/
 
@@ -47,7 +46,7 @@ Installation
 
 2. Download and Install JMF 2.1.1
 
-  Cairo requires Java Media Framework (JMF) version 2.1.1. which can be downloaded here:
+  Zanzibar requires Java Media Framework (JMF) version 2.1.1. which can be downloaded here:
 
   http://java.sun.com/products/java-media/jmf/2.1.1/download.html
 
@@ -77,28 +76,72 @@ Installation
 Getting Started
 ---------------
 
-Once Zanzibar is successfully installed (and you have an MRCPv2 server -- like cairo-server) you can follow the instructions below to run the demos.
+*Server Architecture
 
-Note: You must run an MRCPv2 server for the demos to work.  If you are using cairo-server, see the cairo-server "Getting Started" instructions for starting up the server processes.
+  Zanzibar Open IVR is composed of two servers:  the speech application server and the Cairo MRCPv2 server.  
+  These two servers are composed of a number of separate components, each performing a specific function and running 
+  in its own process space (i.e. JVM).
+
+*----------+----------------------+------------------------------------------------------------+
+| Server   | Component            | Function                                                   |
+*----------+----------------------+------------------------------------------------------------+
+| MRPCv2   | Resource Server      | Manages client connections with resources (only one of     |
+| Server   |                      | these should be running per Cairo deployment).             |
+*----------+----------------------+------------------------------------------------------------+
+| MRCPv2   | Transmitter Resource | Responsible for all functions that generate audio data     |
+| Server   |                      | to be streamed to the client (e.g. speech synthesis).      |
+*----------+----------------------+------------------------------------------------------------+
+| MRCPv2   | Receiver Resource    | Responsible for all functions that process audio data      |
+| Server   |                      | streamed from the client (e.g. speech recognition).        |
+*----------+----------------------+------------------------------------------------------------+
+| Speech   | Speech App Server    | Responsible for communicating with the telephony platform  |
+| Server   |                      | maintaining sessions, running applications for the caller. |
+*----------+----------------------+------------------------------------------------------------+
+
+  OpenIVR can be started up in a variety of configurations depending upon the capabilities required of the individual deployment.  
+  Out of the box, openIVR is confgured to run in two ways:
+  
+     * With one instance of each component type: a Resource Server, a Receiver Resource, a Transmitter Resource and a speech application server.
+     * With all four components running in a single process (allinone.bat)
 
 
-Starting the Zanzibar Server
-----------------------------
-Zanzibar can be run in two different configurations.  Asterisk integration mode or demo mode.
+Launching Server Processes
+----------------------
+  Server processes are started by passing appropriate parameters to the launch.bat script in the bin subdirectories of your installation.  
+  However the launch.bat script should not be invoked directly.  Instead batch files are supplied for each of the server processes present 
+  in the default configuration.
 
-In demo mode you can run the demos using a sip phone communicating directly with zanzibar speech application server.  In asterisk mode you 
-call the asterisk pbx which can route the call (via the dialplan) to the speech application server.  Note that you can use any pbx or other 
-telephony platform that uses SIP and RTP for signalling and streaming respectively WITH THE ONE EXCEPTION OF TRANSFERING CALLS.  At present 
-we are using the Asterisk Manager Interface (AMI) for redirecting calls using Asterisk-java.  In the future we plan to do this with SIP and 
-support call redirection in standard way too.
+  There are two configurations provided with the download.  To start the speech application server in one of these modes:
 
-Launching Server Process
---------------------------
-The Speech Application Server process is started by passing appropriate parameters to the launch.bat (or launch.sh) script in the bin subdirectory
-of your installation.  However the launch.bat script should not be invoked directly.  Instead batch files (and shell scripts) are supplied for starting 
-the server in either of the preconfigured modes:  Asterisk Integration Mode and Demo mode.
+  Use asteriskConnector.bat/sh to integrate with an asterisk PBX (or any other SIP, RTP based pbx). 
 
-Note that the only diffrence in the asteriskConnector and demoConnector scripts is the configuration xml file passed in on the command line.
+  Use (<<<demoConnector.bat/sh>>>) to run the demo mode with a sip phone.  In demo mode you can run the demos using a sip phone 
+  communicating directly with zanzibar speech application server.  In asterisk mode you 
+  call the asterisk pbx which can route the call (via the dialplan) to the speech application server.  Note that you can use any pbx or other 
+  telephony platform that uses SIP and RTP for signalling and streaming respectively WITH THE ONE EXCEPTION OF TRANSFERING CALLS.  At present 
+  we are using the Asterisk Manager Interface (AMI) for redirecting calls using Asterisk-java.  In the future we plan to do this with SIP and 
+  support call redirection in standard way too.
+
+  As noted above, you can run all components in a single JVM (i.e. running the Cairo MRCPv2 Server in the same process as the speech server, execute the allinone.bat (or allinone.sh) file.  This script is configured out of the box to run in demo mode.
+
+
+Launching the MRCPv2 Server
+----------------------  
+  If you are running the speech application server in its own JVM you will need an MRCPv2 Server.  
+  The Cairo MRCPv2 Server is included with openIVR.  To launch the MRCPv2 Server processes:
+
+  The resource server (rserver.bat) should always be started first since the resources must register with the resource server when 
+  they become available.  Once the resource server has completed initialization you will see a message on the console that says "Server 
+  and registry bound and waiting..."
+ 
+  Then the individual resources (transmitter1.bat and receiver1.bat) can be started in any order.  When ready, each of the resources 
+  will display a "Resource bound and waiting..." message.
+  
+  Once all three server processes have completed initialization and display a waiting message, the server cluster is ready to accept 
+  MRCPv2 client requests.
+
+  (See the Cairo web site for more information on configuring Cairo MRCPv2 Server.)
+
  
 Configuring the Server
 ----------------------
@@ -180,7 +223,7 @@ with an underscore prefix.  For instance if you want to run the Parrot demo when
   
 Running in Demo Mode
 --------------------
-Start the server using the democontext.xml configuration (run the demoConnector.bat script)
+Start the server using the democonfig.xml configuration (run the demoConnector.bat script)
 
 If your run the zanzibar speech appliction server in demo mode with the default configuration file, you have the following demo choices
 
