@@ -1,0 +1,24 @@
+                       -----
+                   Submitting Patches 
+                       -----
+                  SpeechForge Project Teams
+                       -----
+
+Submitting Patches
+
+   If you want to contribute code and you're not a member of a project team then you will have to submit a patch. A patch is a file that contains the differences between one or more original files and their modified versions. The team can then review your changes and apply the patch on your behalf.
+
+*Creating a patch
+
+   Use the following command from the top directory of the project:
+
+   svn diff \> bugFix123.patch
+
+   This command compares one or more files in your local working copy with their latest versions in the repository and outputs the differences.
+
+   Try to give the patch a meaningful name so that it  can be easily identified. If you can, use the same name that is used in the issue tracking system. 
+
+*Submitting a Patch
+
+   To submit a patch, attach it to a corresponding issue in the Issue Tracking system. 
+

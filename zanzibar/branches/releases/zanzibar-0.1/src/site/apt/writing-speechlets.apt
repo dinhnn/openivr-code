@@ -1,0 +1,224 @@
+                       -----
+                    Writing Speech Applications in Zanzibar
+                       -----
+                  Zanzibar Project Team
+                       -----
+
+
+Writing your own speech applications
+
+   One way to build your application is to use the voicexml support and specify the application in voiceXML.  
+
+   You can also write Speech applications in java.  Zanzibar speech applications extend the speechlet abstract class.  Your application logic 
+should be placed in the runApplication method.  This logic will run within its own thread in the zanzibar server.  Each speech application runs 
+within the zanzibar container and can communicate with the container using the context object. 
+
+   To use speech resoruces (in zanzibar) use the SpeechClient object.  This can be retrived from the context.  If you allow zanzibar to 
+create an instance of the speechlet for you, the speech client you receive from the context will already have your mrcp channels configured and 
+your audio streams to the recognizer and from the tts engine will be setup for you.   The speech client has simple recognize, play and 
+playAndRecognize methods in both blocking and non-blocking modes. 
+
+   To use speech resources in your application get the speech client from the context:
+
+---
+SpeechClient sClient = this.getContext().getSpeechClient();
+---
+   
+   You can use speechClient blocking or non-blocking calls.  If you choose to use the non-blocking calls, you can get recogntion and sythesis events.  
+Implement a SpeechEventListener and add it as a listener to speechClient.
+
+---
+SpeechEventListener myListener = new SpeechEventListenerImpl();
+sClient.addListener(myListerner);
+---
+   
+   The speech client provides you with a convenient playAndRecognize Method which will handle bargein logic for you.  It stops synthesis upon 
+a speechStarted event or starts the noInput timer upon the completion of the synthesis.
+   
+   To terminate the session (at the completion of the application) call dialogCompleted() on the context.  The context is available in the 
+speechlet base class
+   
+---
+this.getContext().dialogCompleted();
+---
+
+   To use the dtmf support be sure you are configured for sip based dtmf.  DTMF pattern matching is done by specifying a regex in the 
+enable method.  The enableDTMF also needs a dtmf listener, the noInput timeout and nomatch timeout (both in ms).  The example below looks 
+for a 4 digit dtmf sequence with no timeouts.  Matches will invoke the characterEventReceived() method.
+
+---
+sClient.enableDtmf("[0-9]{4}", this, 0, 0);
+---
+
+   To transfer a call in your application, get the telephoney client from the context.
+
+---
+SpeechClient tClient = this.getContext().getTelephonyClient();
+---
+   
+   You can transfer a call like this.
+
+---
+channelName = this.getContext().getExternalSession().getChannelName();
+tClient.redirectBlocking(channelName, pbxContext, pbxExtenion);
+---
+
+   Note that the context and extension must be configured on your pbx.  And the AMI is set up for receiving requests.
+
+
+  Java speechlets must also implement the SpeechEventListener interface shown below if you are using non-blocking calls.  Note that there 
+are 3 methods in the listener: one for sythesis events, one for recognition events and one for character input events.
+
+---
+
+/**
+ * Callback interface for getting recognition and synthesis/tts results.
+ * 
+ * @author Spencer Lord {@literal <}<a href="mailto:salord@users.sourceforge.net">salord@users.sourceforge.net</a>{@literal >}
+ */
+public interface SpeechEventListener {
+
+    
+    /**
+     * Recognition event received.
+     * 
+     * @param event the mrcp event
+     * @param r the recognition result
+     */
+    public void recognitionEventReceived(MrcpEvent event, RecognitionResult r);
+    
+    /**
+     * Tts completed event received.
+     * 
+     * @param event the mrcp event
+     */
+    public void speechSynthEventReceived(MrcpEvent event);
+
+    
+
+    public enum EventType {recognitionMatch, noInputTimeout, noMatchTimeout}
+    
+    /**
+     * Character event received.  Most typically used for DTMF (in which case valid characters include 0-9, * and #)
+     * 
+     * @param c the charcater received
+     */
+    public void characterEventReceived(String c, EventType status);
+    
+}
+---
+
+*Semantic Interpretation of recognition results
+
+   You can use the Rule object to extract semantic information from the recognition results.  There will be rule:tag pairs based on the grammars used by the recognizer.  Note the tags must be part of the grammar.  Note in the gra,mmar below that the tag "main" can have a value of either WEATHER, SPORTS, STOCKS or QUIT. Also note that main=QUIT whether the speaker says exit or quit!
+
+---
+#JSGF V1.0;
+
+/**
+ * JSGF Grammar for demo examples
+ */
+
+grammar example;
+
+public <main> = ( [ <pre> ] ( <weather> {WEATHER} | <sports>  {SPORTS} | <stocks> {STOCKS} ) ) | <quit> {QUIT} ;
+
+<pre> = ( I would like [ to hear ] ) | ( hear ) | ( [ please ] get [ me ] ) | ( look up );
+
+<weather> = [ the ] weather;
+
+<sports> = sports [ news ];
+
+<stocks> = ( [ a ] stock ( quote | quotes ) ) | stocks;
+
+<quit> = exit | quit;
+
+
+---
+
+  Here is a simple parrot example (included in the distribution) for your examination.
+
+---
+
+/**
+ * Parrot Speech Application.
+ * 
+ * @author Spencer Lord {@literal <}<a href="mailto:salord@users.sourceforge.net">salord@users.sourceforge.net</a>{@literal >}
+ */
+public class Parrot extends Speechlet implements SpeechEventListener {
+    private static Logger _logger = Logger.getLogger(Parrot.class);
+      
+    public Parrot() {
+        super();
+    }
+
+    protected  void  runApplication() {
+        try {
+            SpeechClient sClient = this.getContext().getSpeechClient();
+            sClient.turnOnBargeIn();
+            String preReordedPrompt = "http://localhost:8080/sal.au";
+            String prompt = "You can start speaking any time.  Would you like to hear the weather, get sports news or hear a stock quote?  Say goodbye to exit.";
+            String grammar = "file:../zanzibar/grammar/example-loop.gram";
+            sClient.enableDtmf("[0-9]{4}", this, 0, 0);
+            while (!stopFlag) {  
+
+                _logger.debug("Calling play and Recognize...");
+                RecognitionResult r = sClient.playAndRecognizeBlocking(false,prompt,grammar, false);
+                if ((r != null) &&  (!r.isOutOfGrammar())) {
+                    _logger.debug("Got a result and calling playBlocking "+r.getText());
+                    sClient.playBlocking(false,r.getText());
+
+                    for (RuleMatch rule : r.getRuleMatches()) {
+                        System.out.println(rule.getTag()+ ":"+rule.getRule());
+                        if ((rule.getTag().equals("QUIT")) && (rule.getRule().equals("main"))) {
+                            //CallControl.amiHangup(session.getForward().getChannelName());
+                            stopFlag = true;
+                            try {
+                                this.getContext().dialogCompleted();
+                            } catch (InvalidContextException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                } else {
+                    _logger.debug("No recognition result...");
+                    sClient.playBlocking(false, "I did not understand");
+                }
+
+            }
+        } catch (MrcpInvocationException e) {
+            _logger.info("MRCP Response status code is: "+e.getResponse().getStatusCode());
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalValueException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalStateException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void recognitionEventReceived(MrcpEvent event, RecognitionResult r) {
+    }
+
+    public void speechSynthEventReceived(MrcpEvent event) {
+    }
+
+    public void characterEventReceived(String c, EventType status) {
+        _logger.info("Character Event! status= "+ status+" code= "+c);
+        
+    }
+
+}
+
+
+---
+

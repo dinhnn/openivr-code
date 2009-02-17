@@ -1,0 +1,16 @@
+                       -----
+                    Issue Tracking
+                       -----
+                  SpeechForge Project Teams
+                       -----
+
+Issue Tracking
+
+   Submitting bug reports and suggesting new features help improve the quality and functionality of the software. 
+
+   When submitting a bug report, please try to provide enough information for someone with no prior knowledge of the bug to recreate the problem for themselves. 
+   When submitting a request for a new feature make sure to keep it as brief and to the point as possible. 
+
+  Check the {{{http://www.atlassian.com/software/jira/docs/v3.6.5/issues.html}online documention}} for help using the issue tracking system.
+
+  You can access the issue tracking system  {{{http://www.speechforge.org:8080/jira/secure/Dashboard.jspa}here}}.

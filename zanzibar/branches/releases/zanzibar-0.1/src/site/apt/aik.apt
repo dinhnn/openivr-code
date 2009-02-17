@@ -1,0 +1,83 @@
+                       -----
+                    Asterisk Integration Kit
+                       -----
+                  Zanzibar Project Team
+                       -----
+
+Asterisk Integration Kit
+
+   The asterisk integration kit enables asterisk to direct calls to a speech application, running on the zanzibar server  You can integrate those applications with your asterisk dialplan.   Zanzibar speech applications can either be defined in voicexml or be java apps that use either mrcp4j api or the ciaro-client api.
+r
+
+   Integration is done primarily through SIP.  Calls can be forwarded to the zanzibar server via SIP messages.  In the future call redirection will also be done via SIP messages -- but at present that is done using Asterisk Manager Interface. 
+
+*SIP configuration
+
+  To redirect calls you must do some cofiguration on the asterisk installation so that it knows where zanzibar's sip agent is.  You can do this by adding an entry like this in yoour asterisk sip.conf file.
+
+---
+[Zanzibar]
+type=peer
+host=yourzanzibarhostname
+port=5090
+dtmfmode=info
+canreinvite=no
+---
+
+
+*Dialplan Integration
+
+  To transfer a call to a java application in the zanzibar server (in this case called parrot) add the following lines in your dialplan in the appropriate place.  Note the two sip extenion headers: x-channel amd x-application.  The channel passed to zanzibar in the x-channel header will be used later to redirect calls back to asterisk and on to a new number.  The x-application header tells zanzibar which application to run on the callers behalf.
+
+---
+exten => 1,n,SIPAddHeader(x-channel:${CHANNEL})
+exten => 1,n,SIPAddHeader(x-application:basic|org.speechforge.apps.demos.Parrot)
+exten => 1,n,Dial(SIP/Zanzibar)
+---
+
+  The previous example ran an java appliction (that uses mrcpv2 calls to a speech server).  Zanziabr also includes an voicexml intepreter.  If you wish to run a voicexml application use a SipHeader command like this:
+
+---
+exten => 1,n,SIPAddHeader("x-application:vxml|http://localhost:8080/hello.vxml")
+---
+
+  Note that the content of the x-application should be in the form
+
+---
+  type|applicationName
+
+   where:  type is either "basic" or "vxml"
+---
+   If type= basic then application name is the fully qualified name of the speechlet that will run for the session else if  type = vxml then application name is the url of the vxml document.
+
+*Asterisk Manager Interface Configuration
+
+  Zanzibar use AMI to transfer calls to other extensions or phone numbers.  For this to work you must add this to the manager.conf ile in your asterisk installation.  (Note that is is pretty insecure.  See asterisk documentation for information on how to secure a n asterisk installation.)
+
+---
+secret=password
+permit=0.0.0.0/0.0.0.0
+read=system,call,log,verbose,agent,command,user
+write=system,call,log,verbose,agent,command,user
+---
+
+   You must also configure Zanzibar so that it knows where asterisk manager is listening.  This is done in the context.xml file
+
+---
+    <bean id="callControl" class="org.speechforge.zanzibar.asterisk.CallControl"
+		init-method="startup" destroy-method="shutdown">
+		<property name="address">
+				    <value>192.168.0.101</value>
+		</property>
+		<property name="name">
+				    <value>manager</value>
+		</property>
+		<property name="password">
+				    <value>password</value>
+		</property>
+		<property name="disabled">
+		           <value>false</value>
+		</property>
+	</bean>
+
+---

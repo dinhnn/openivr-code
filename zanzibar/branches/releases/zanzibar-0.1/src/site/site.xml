@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="openIVR">
+
+  <bannerLeft>
+    <name>openIVR Banner</name>
+    <src>images/logo.png</src>
+    <href>index.html</href>
+  </bannerLeft>
+
+  <bannerRight>
+    <name>SourceForge.net Logo</name>
+    <src>http://sflogo.sourceforge.net/sflogo.php?group_id=149085&amp;type=5</src>
+    <href>http://sourceforge.net/</href>
+  </bannerRight>
+
+  <body>
+
+    <links>
+      <item name="Downloads" href="http://sourceforge.net/project/showfiles.php?group_id=149085"/>
+    </links>
+
+    <menu name="openIVR">
+      <item name="Overview" href="index.html"/>
+      <item name="Installation" href="install.html"/>
+      <item name="Getting Started" href="intro.html"/>
+
+      <item name="Architecture" href="architecture-overview.html"/>
+      <item name="Downloads" href="http://sourceforge.net/project/showfiles.php?group_id=252963"/>
+
+      <item name="Writing Speech Applications" href="writing-speechlets.html"/>
+      <item name="API Documentation" href="docs/apidocs/index.html?overview-summary.html"/>
+    </menu>
+
+
+    <!--menu name="Community">
+	 <item name="Overview" href="community-overview.html"/>
+         <item name="Issue Tracking" href="issue-tracking.html"/>
+         <item name="Contribute Code" href="contribute-code.html"/>
+         <item name="Submitting Patches" href="submitting-patches.html"/>
+         <item name="Contributor Agreement" href="sign-ca.html"/>
+    </menu-->
+    
+    <menu name="Integration Kits">
+      <item name="Asterisk" href="aik.html"/>
+    </menu>
+
+    <menu name="Project Documentation">
+      <item name="Project Info" href="project-info.html" collapse="false">
+        <item name="Dependencies" href="dependencies.html"/>
+        <item name="Mailing Lists" href="mail-lists.html"/>
+        <item name="Project License" href="license.html"/>
+        <item name="Project Team" href="team-list.html"/>
+        <item name="Source Repository" href="source-repository.html"/>
+      </item>
+    </menu>
+
+  </body>
+
+</project>

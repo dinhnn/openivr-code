@@ -1,0 +1,27 @@
+                       -----
+                     Overview
+                       -----
+                  OpenIVR Project Team
+                       -----
+
+Welcome to the OpenIVR Project
+
+   OpenIVR is a complete, standards based, open source IVR.   It contains a MRCPv2 Server with the Sphinx4 ASR engine and FreeTTS speech synthesizer.  It has a voiceXML interpreter so that you can deploy and run voiceXML applications.  It can be integrated with a VOIP PBX (like Asterisk) using SIP and RTP VOIP standards.   
+   
+   * You can use openIVR to voice enable your existing Asterisk PBX.  
+   
+   * You can deploy Asterisk and openIVR together to voice enable your web applications.
+
+   * You can deploy and run VoiceXML applications.
+
+   * You can write and deploy speech applications in java using the MRCP4j library.  
+
+Latest News
+
+*openIVR v0.1 Released - TBS
+
+Get openIVR
+
+  The latest version of openIVR can be downloaded  {{{http://sourceforge.net/project/showfiles.php?group_id=249435}here}}.
+
+  After {{{install.html}installation}} of openIVR please see the {{{intro.html}Getting Started Guide}} for instructions on starting up the openIVR server processes and running the demos.
