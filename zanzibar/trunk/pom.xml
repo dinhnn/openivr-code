@@ -3,12 +3,12 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.speechforge</groupId>
-  <artifactId>zanzibar</artifactId>
+  <artifactId>openivr</artifactId>
   <packaging>jar</packaging>
   <name>Zanzibar</name>
   <version>SNAPSHOT</version>
   <description></description>
-  <url>http://${pom.artifactId}.speechdynamix.com</url>
+  <url>http://${pom.artifactId}.spokentech.com</url>
   <inceptionYear>2008</inceptionYear>
 
 
@@ -18,20 +18,6 @@
       <subscribe>http://lists.sourceforge.net/lists/listinfo/${pom.artifactId}-checkin</subscribe>
       <unsubscribe>http://lists.sourceforge.net/lists/listinfo/${pom.artifactId}-checkin</unsubscribe>
       <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.artifactId}-checkin</archive>
-    </mailingList>
-    <mailingList>
-      <name>${pom.artifactId}-dev</name>
-      <subscribe>http://lists.sourceforge.net/lists/listinfo/${pom.artifactId}-developer</subscribe>
-      <unsubscribe>http://lists.sourceforge.net/lists/listinfo/${pom.artifactId}-developer</unsubscribe>
-      <post>http://www.nabble.com/${pom.artifactId}-developer-f15779.html</post>
-      <archive>http://www.nabble.com/${pom.artifactId}-developer-f15779.html</archive>
-    </mailingList>
-    <mailingList>
-      <name>${pom.artifactId}-user</name>
-      <subscribe>http://lists.sourceforge.net/lists/listinfo/${pom.artifactId}-user</subscribe>
-      <unsubscribe>http://lists.sourceforge.net/lists/listinfo/${pom.artifactId}-user</unsubscribe>
-      <post>http://www.nabble.com/${pom.artifactId}-user-f15778.html</post>
-      <archive>http://www.nabble.com/${pom.artifactId}-user-f15778.html</archive>
     </mailingList>
   </mailingLists>
 
@@ -85,8 +71,8 @@
 
   
   <organization>
-    <name>SpeechForge</name>
-    <url>http://www.speechforge.org</url>
+    <name>SpokenTech</name>
+    <url>http://www.spokentech.org</url>
   </organization>
 
   <build>

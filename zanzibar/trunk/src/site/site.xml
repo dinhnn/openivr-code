@@ -16,7 +16,7 @@
   <body>
 
     <links>
-      <item name="Downloads" href="http://sourceforge.net/project/showfiles.php?group_id=149085"/>
+      <item name="Downloads" href="http://sourceforge.net/project/showfiles.php?group_id=252963"/>
     </links>
 
     <menu name="openIVR">
@@ -32,13 +32,14 @@
     </menu>
 
 
-    <!--menu name="Community">
-	 <item name="Overview" href="community-overview.html"/>
+    <menu name="Community">
+
+	     <item name="Support" href="support.html"/>
          <item name="Issue Tracking" href="issue-tracking.html"/>
          <item name="Contribute Code" href="contribute-code.html"/>
-         <item name="Submitting Patches" href="submitting-patches.html"/>
-         <item name="Contributor Agreement" href="sign-ca.html"/>
-    </menu-->
+         <!--item name="Submitting Patches" href="submitting-patches.html"/-->
+         <!--item name="Contributor Agreement" href="sign-ca.html"/-->
+    </menu>
     
     <menu name="Integration Kits">
       <item name="Asterisk" href="aik.html"/>
