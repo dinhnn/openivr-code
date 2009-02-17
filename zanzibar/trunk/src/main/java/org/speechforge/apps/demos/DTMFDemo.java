@@ -117,7 +117,7 @@ public class DTMFDemo extends Speechlet implements SpeechEventListener {
 
         if (status == EventType.recognitionMatch) {
 	        try {
-		        sClient.playBlocking(false, "Received a DTMF Match: "+c);
+		        sClient.queuePrompt(false, "Received a DTMF Match: "+c);
 	        } catch (MrcpInvocationException e) {
 		        // TODO Auto-generated catch block
 		        e.printStackTrace();
