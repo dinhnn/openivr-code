@@ -22,9 +22,13 @@
  */
 package org.speechforge.zanzibar.speechlet;
 
+import java.io.IOException;
+
 import javax.sip.SipException;
 
+import org.mrcp4j.client.MrcpInvocationException;
 import org.speechforge.cairo.sip.SipSession;
+import org.speechforge.cairo.client.NoMediaControlChannelException;
 import org.speechforge.cairo.client.SpeechClient;
 import org.speechforge.cairo.client.SpeechClientImpl;
 import org.speechforge.zanzibar.telephony.TelephonyClient;
@@ -70,11 +74,26 @@ public class SpeechletContextImpl implements SpeechletContext {
             externalSession.getAgent().sendBye(externalSession);
             //platformSession.getAgent().dispose();
             
+            //cancel any active recognition requests
+            speechClient.stopActiveRecognitionRequests();
+            
             //clean up the dialog (the speech server session is cleaned up here)
             container.StopDialog(externalSession);
         } catch (SipException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        } catch (MrcpInvocationException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+        } catch (IOException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+        } catch (InterruptedException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+        } catch (NoMediaControlChannelException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
         }
 
     }

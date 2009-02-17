@@ -93,7 +93,7 @@ public class SipServer implements SessionListener {
         boolean responded = false;
         SdpMessage _response;
         SipSession _session;
-        public static SipSession _reqSession;
+
         //private int _retryCount = 0;
         //private static final int  MAXRETRIES = 3;
         
@@ -147,13 +147,7 @@ public class SipServer implements SessionListener {
             
         }
         
-        
-        //test method.  remove this.
-        public static SipSession getSession() {
-            return _reqSession;
-        }
-        
-        
+
         public synchronized SdpMessage sendInviteWithoutProxy(String to, SdpMessage message, String peerAddress, int peerPort) throws SipException {
             //_retryCount = 0;
  
