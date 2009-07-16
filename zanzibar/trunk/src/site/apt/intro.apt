@@ -294,11 +294,11 @@ exten => 1,n,SIPAddHeader("x-application:vxml|http://localhost:8080/hello.vxml")
 ---
 type|applicationName
 
-where:  type is either "beanid" "classname" or "vxml"
+where:  type is either "beanId" "className" or "vxml"
 ---
 
    
-   If  type=beanid, the application name is the beanid id as configured in spring config file, if type= classname then application name is the fully qualified name of the java class that will run for the session else if  type = vxml then application name is the url of the vxml document.
+   If  type=beanId, the application name is the beanid id as configured in spring config file, if type= className then application name is the fully qualified name of the java class that will run for the session else if  type = vxml then application name is the url of the vxml document.
 
 *Asterisk Manager Interface (AMI) Configuration
 

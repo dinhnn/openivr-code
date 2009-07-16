@@ -4,9 +4,9 @@
                   OpenIVR Project Team
                        -----
 
-Welcome to the OpenIVR Project
+Welcome to the Zanzibar OpenIVR Project
 
-   OpenIVR is a complete, standards based, open source IVR.   It contains a MRCPv2 Server with the Sphinx4 ASR engine and FreeTTS speech synthesizer.  It has a voiceXML interpreter so that you can deploy and run voiceXML applications.  It can be integrated with a VOIP PBX (like Asterisk) using SIP and RTP VOIP standards.   
+   Zanzibar OpenIVR is a complete, standards based, open source IVR.   It contains a MRCPv2 Server with the Sphinx4 ASR engine and FreeTTS speech synthesizer.  It has a voiceXML interpreter so that you can deploy and run voiceXML applications.  It can be integrated with a VOIP PBX (like Asterisk) using SIP and RTP VOIP standards.   
    
    * You can use openIVR to voice enable your existing Asterisk PBX.  
    
@@ -18,9 +18,14 @@ Welcome to the OpenIVR Project
 
 Latest News
 
-*openIVR v0.1 Released - TBS
+*Zanzibar open IVR v0.1 Released - February 16, 2009
 
-Get openIVR
+   Zanzibar open IVR project team is proud to introduce an alpha version of the first fully open source IVR.
+Zanzibar is a standards based speech recognition IVR with a MRCPv2 server that allows you deploy voiceXML applications.
+Zanzibar integrates with IP PBX using SIP and RTP standards.
+
+
+Get Zanzibar openIVR
 
   The latest version of openIVR can be downloaded  {{{http://sourceforge.net/project/showfiles.php?group_id=252963}here}}.
 

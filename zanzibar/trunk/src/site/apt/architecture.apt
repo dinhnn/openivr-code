@@ -6,18 +6,18 @@
 
 Architecture
 
-  The Speechforge platform provides a complete open source stack that is modular, component based, standards based and scalable.  It can speech enable telephony platforms and provides the infrastructure to run speech applications.    You can choose to use the entire stack -- or only the parts that you need.  It was designed under the  principle  to keep the components as simple as possible but no simpler.  Components are well defined with clean interfaces and interact with standards wherever possible.
+  The Zanzibar IVR runs in two servers.  The zanzibar speech application server and the cairo MRCPv2 server.  
+The Speech Application server interacts with the telephony platform, establishes,  maintains and tears down sessions, runs the application for the user, 
+gathers speech resources as needed from the MRCPv2 server. 
 
 [images/StackDiagramWithVoicexml.png] 
 
-  The full telephony stack runs  primarily in two servers.  The zanziabr speechlet server and the cairo speech server.  The Speechlet server interacts with the telephony platform, establishes,  maintains and tears down sessions, runs the application for the user, gathers speech resources as needed from the speech server. 
+  The Cairo mrcpv2 server provides speech recognition and synthesis services for the speech application server or other mrcpv2 client.  Cairo does not implement 
+speech recognition and sythesis engines.  It integrates available opensource engines and provides MRCPv2 interface to those resources.  At present cairo supports 
+FreeTTS and Sphinx4 for sythesis and recognition respectively.
 
-  The Cairo speech server is a mrcpv2 server that provides speech recognition and synthesis services for the speechlet server or other mrcpv2 client.  Cairo does not implement speech recognition and sythesis engines.  It integrates available opensource engines and provides MRCPv2 interface to those resources.  At present cairo supports FreeTTS and Sphinx4 for sythesis and recognition respectively.
+   If you are speech enabling a standard based paltform (one that uses SIP for session control and RTP for audio streaming) you can use the the Zanzibar IVR 
+to deploy andrun your speech applications.  With zanzibar IVR you can run voicexml applications or you can program your applications directly against the 
+cairo-client API or use the MRCP4J API. 
 
-  Users of Cairo Speech Server can implement their own mrcpv2 client or use their favorite mrcp libraries. They can also choose to use speechforge mrcp4j library.   For simple yet powerful mrcpv2 client development they can also choose to use the cairo-client package. Speechforge also provides a cairo-sip package to help manage sessions form the remote client and to establish sessions and to gather and use speech resources from the cairo-server (or othr mrcp servers). 
-
-  Cairo-sip can also be useful for integrating with a standards based telephony platforms.  Clients to the speechlet server (or other speech applications like a voicxml browser) typically use SIP to establish a session.  This may be done directly from a SIP phone or other SIP capable client.  In most implementation access to the telephone network is provided through a PBX.   Users can build there own sip agents using their favorite libraries or they can use the cairo-sip package to do basic sip capabilities for developers who wish to build
-
-  If you are speech enabling a standard based paltform (one that uses SIP for session control and RTP for audio streaming) you can use the the Zanzibar Speechlet server to manage you speech applications.  With the speechlet server you can run voicexml applications or you can program your own apps directly against the cairo-client API or even use the MRCP4J API directly. 
-
-   See {{{sequence.html}Typical Sequence of Events}}
+   This is a typical {{{sequence.html}Typical Sequence of Events}} when establishing a session.

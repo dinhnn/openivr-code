@@ -9,7 +9,7 @@
 
   <bannerRight>
     <name>SourceForge.net Logo</name>
-    <src>http://sflogo.sourceforge.net/sflogo.php?group_id=149085&amp;type=5</src>
+    <src>http://sflogo.sourceforge.net/sflogo.php?group_id=252963&amp;type=5</src>
     <href>http://sourceforge.net/</href>
   </bannerRight>
 
@@ -24,7 +24,7 @@
       <item name="Installation" href="install.html"/>
       <item name="Getting Started" href="intro.html"/>
 
-      <item name="Architecture" href="architecture-overview.html"/>
+      <item name="Architecture" href="architecture.html"/>
       <item name="Downloads" href="http://sourceforge.net/project/showfiles.php?group_id=252963"/>
 
       <item name="Writing Speech Applications" href="writing-speechlets.html"/>

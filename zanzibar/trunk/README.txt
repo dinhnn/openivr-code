@@ -203,7 +203,7 @@ below for more details.
   +------------------------------------------------------------------------------------+ 
   
   
-When using the application by number dialog service.  You must configure you Speech applications with the beanid set to the "number"  
+When using the application by number dialog service.  You must configure you Speech applications with the beanId set to the "number"  
 with an underscore prefix.  For instance if you want to run the Parrot demo when someone dials 1000 extension configure the demo as follows.
 
   +--------------------------------------------------------------------------------------------+
@@ -333,10 +333,10 @@ Start the server using the context.xml configuration (run the asteriskConnector.
    +-----------------------------------------------------------+
    | type|applicationName                                      |
    |                                                           |
-   | where:  type is either "beanid" "classname" or "vxml"     |
+   | where:  type is either "beanId" "className" or "vxml"     |
    +-----------------------------------------------------------+
    
-   If  type=beanid, the application name is the beanid id as configured in spring config file, if type= classname then application name 
+   If  type=beanId, the application name is the beanId id as configured in spring config file, if type= classname then application name 
    is the fully qualified name of the java class that will run for the session else if  type = vxml then application name is the url of 
    the vxml document.
 
