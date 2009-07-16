@@ -128,11 +128,8 @@ public class SipServer implements SessionListener {
             try {
                 InetAddress addr = InetAddress.getLocalHost();
                 mrcpClientHost = addr.getHostAddress();
-                _logger.info("***: "+mrcpClientHost);
-                //host = addr.getCanonicalHostName();
             } catch (UnknownHostException e) {
             	mrcpClientHost = "127.0.0.1";
-                //host = "localhost";
                 _logger.debug(e, e);
                 _logger.warn("using localhost for mrcp client host name in sdp messages");
             }
