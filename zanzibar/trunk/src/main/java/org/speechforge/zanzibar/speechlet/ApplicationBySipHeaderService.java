@@ -82,7 +82,7 @@ public class ApplicationBySipHeaderService implements SpeechletService {
        
         // Get the application name (origninally set  in the underlying platform.  and sent in the sip header
         // It is of the form applicationType|applicationName (for example vxml:HelloWorld or basic|Parrot)
-        String aname = context.getExternalSession().getApplicationName();
+        String aname = context.getPBXSession().getApplicationName();
         if (aname == null) 
             throw new Exception("No Application Specified");
 
@@ -109,7 +109,7 @@ public class ApplicationBySipHeaderService implements SpeechletService {
         //turn on or off the instrumentation for this dialog
         dialog.setInstrumentation(instrumentation);
         
-        _logger.info("Starting a new "+context.getExternalSession().getApplicationName()+" speechlet with session id = "+ context.getExternalSession().getId());
+        _logger.info("Starting a new "+context.getPBXSession().getApplicationName()+" speechlet with session id = "+ context.getPBXSession().getId());
         dialog.startup(context, app[1]);
         addDialog(dialog);
         return dialog;

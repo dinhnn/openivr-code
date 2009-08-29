@@ -81,7 +81,7 @@ public class ApplicationByNumberService implements SpeechletService {
 
         //Get the Application name from the Sip TO Header. Theis Dialog Services uses the phone number called as the name of the application/session/dialog to run
         //TODO: revisit the location of the application name.  SHould it be in this session rather in the forwarding session? 
-        SipSession session = context.getExternalSession();
+        SipSession session = context.getPBXSession();
         To toHeader = (To) session.getRequest().getRequest().getHeader(SIPHeaderNames.TO);
         URI uri = toHeader.getAddress().getURI();
         String aname = null;

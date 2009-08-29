@@ -55,7 +55,7 @@ public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, Spe
     //private static Map<String, VoiceXmlSessionProcessor> dialogs = new Hashtable<String, VoiceXmlSessionProcessor>();
 
     public String getId() {
-        return _context.getExternalSession().getId();
+        return _context.getPBXSession().getId();
     }
 
     /**
@@ -68,7 +68,7 @@ public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, Spe
 
     public void stop() throws SipException {
         jvxmlSession.hangup();
-        _context.getInternalSession().bye();
+        _context.getMRCPv2Session().bye();
     }
 
     public void recognitionEventReceived(MrcpEvent event, RecognitionResult r) {
@@ -170,7 +170,7 @@ public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, Spe
     }
 
     public SipSession getSession() {
-        return _context.getExternalSession();
+        return _context.getPBXSession();
     }
     
     /* (non-Javadoc)
@@ -204,7 +204,7 @@ public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, Spe
 	    }
 
 	    public void recognitionEventReceived(MrcpEvent arg0, RecognitionResult arg1) {
-	    	SipSession sipSession = _context.getExternalSession();
+	    	SipSession sipSession = _context.getPBXSession();
 	    	try {
 	            sipSession.getAgent().sendInfoRequest(sipSession, "application", "mrcp-event", arg0.toString());
             } catch (SipException e) {
@@ -214,7 +214,7 @@ public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, Spe
 	    }
 
 	    public void speechSynthEventReceived(MrcpEvent arg0) {
-	    	SipSession sipSession = _context.getExternalSession();
+	    	SipSession sipSession = _context.getPBXSession();
 	    	try {
 	            sipSession.getAgent().sendInfoRequest(sipSession, "application", "mrcp-event", arg0.toString());
             } catch (SipException e) {

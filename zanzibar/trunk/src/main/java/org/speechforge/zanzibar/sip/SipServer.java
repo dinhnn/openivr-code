@@ -232,30 +232,12 @@ public class SipServer implements SessionListener {
                         MrcpChannel recogChannel = provider.createChannel(receiverChannelId, remoteHostAdress, receiverPort, protocol);
                         session.setTtsChannel(ttsChannel);
                         session.setRecogChannel(recogChannel);
+                        
+                        
+                        SipSession internal = pair.getExternal();
+                        SipSession external = pair.getInternal();
 
-                        pbxResponse = constructInviteResponseToPbx(remoteRtpPort,remoteHostName,supportedFormats);
-                        
-                       _sipAgent.sendResponse(pair.getExternal(), pbxResponse);
-                       
-                       //setup the context (for speechlet to communicate back to container and access to container services)
-                       SpeechletContext c = new SpeechletContextImpl();
-                       
-                       //The context needs a reference to the conatiner
-                       ((SpeechletContextImpl) c).setContainer(dialogService);
-                       
-                       //The context needs both the internal and external sessions
-                       ((SpeechletContext) c).setExternalSession(pair.getExternal()); //**** This is the original
-                       ((SpeechletContext) c).setInternalSession(pair.getInternal());
-                                              
-                       
-                        //create the actual speechlet (running in a thread within the session processor)
-                        SessionProcessor d = dialogService.startNewDialog(c);
-                        
-                        //the sessionprocessor needs a referenece to the context
-                        d.setContext(c);
-                        
-                        //the context also needs a reference to the speechlet
-                        ((SpeechletContextImpl) c).setSpeechlet(d);
+                        pbxResponse = startupSpeechlet(remoteHostName, remoteRtpPort, supportedFormats,internal, external);
             
                         //System.out.println(">>>>Here is the invite response:");
                         //System.out.println(pbxResponse.getSessionDescription().toString());
@@ -296,6 +278,33 @@ public class SipServer implements SessionListener {
 
             return pbxResponse;
         }
+
+        private SdpMessage startupSpeechlet(String remoteHostName, int remoteRtpPort, Vector supportedFormats, SipSession internal, SipSession external) throws UnknownHostException, SdpException, Exception {
+			SdpMessage pbxResponse;
+			pbxResponse = constructInviteResponseToPbx(remoteRtpPort, remoteHostName, supportedFormats);
+	
+			_sipAgent.sendResponse(external, pbxResponse);
+	
+			// setup the context (for speechlet to communicate back to container and access to container services)
+			SpeechletContext c = new SpeechletContextImpl();
+	
+			// The context needs a reference to the conatiner
+			((SpeechletContextImpl) c).setContainer(dialogService);
+	
+			// The context needs both the internal and external sessions
+			((SpeechletContext) c).setPBXSession(external); // **** This is the original
+			((SpeechletContext) c).setMRCPSession(internal);
+	
+			// create the actual speechlet (running in a thread within the session processor)
+			SessionProcessor d = dialogService.startNewDialog(c);
+	
+			// the sessionprocessor needs a referenece to the context
+			d.setContext(c);
+	
+			// the context also needs a reference to the speechlet
+			((SpeechletContextImpl) c).setSpeechlet(d);
+			return pbxResponse;
+		}
                         
 
         public synchronized void processTimeout(TimeoutEvent event) {
@@ -360,30 +369,44 @@ public class SipServer implements SessionListener {
                 throw e;
             }
 
-            //construct the invite request and send it to the cairo resource server to get the resources for the session
-            //TODO: check which resource needed in the original invite (from pbx).  the construct method below blindly gets a tts and recog resoruce
-            SdpMessage message = null;
-            SdpMessage inviteResponse = null;
-            try {
-                message = constructInviteRequestToCairo(pbxRtpPort,pbxHost,pbxSessionName,pbxFormats);
-                internalSession = _sipAgent.sendInviteWithoutProxy(cairoSipAddress, message, cairoSipHostName, cairoSipPort);
-            } catch (UnknownHostException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            } catch (SipException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
+            
+            String mode = "mccpv2";
+            if (mode == "cloud") {
+            	
+            	//create the rtp receiver
+            	//create the rtp transmitter
+            	//put in the sesssion
+            	//create the dialogObject and and to the pool of active dialogs.
+            	
+            } else if (mode == "mrcpv2") {
+            
+            
+	            
+	            //construct the invite request and send it to the cairo resource server to get the resources for the session
+	            //TODO: check which resource needed in the original invite (from pbx).  the construct method below blindly gets a tts and recog resoruce
+	            SdpMessage message = null;
+	            SdpMessage inviteResponse = null;
+	            try {
+	                message = constructInviteRequestToCairo(pbxRtpPort,pbxHost,pbxSessionName,pbxFormats);
+	                internalSession = _sipAgent.sendInviteWithoutProxy(cairoSipAddress, message, cairoSipHostName, cairoSipPort);
+	            } catch (UnknownHostException e1) {
+	                // TODO Auto-generated catch block
+	                e1.printStackTrace();
+	            } catch (SipException e1) {
+	                // TODO Auto-generated catch block
+	                e1.printStackTrace();
+	            }
+	            //these sessions are linked thru a stateful proxy.  
+	            //the forward attribute is not good enough (one side is the backwrds lookup)
+	            //TODO: Session rediesign.  It has become a bucket of things that are sometmes needed in the client and sometimes in teh server
+	            // and the proxy relationship is messy with the single reference "forward"
+	            session.setForward(internalSession);
+	            internalSession.setForward(session);
+	            SessionPair sessionPair = new SessionPair(internalSession,session);
+	            //System.out.println(":::: ADDING  Internal "+internalSession.getId()+" :::::::");
+	            //System.out.println(":::: AND THE External "+session.getId()+" :::::::");
+	            waitingList.put(internalSession.getCtx().toString(),sessionPair);
             }
-            //these sessions are linked thru a stateful proxy.  
-            //the forward attribute is not good enough (one side is the backwrds lookup)
-            //TODO: Session rediesign.  It has become a bucket of things that are sometmes needed in the client and sometimes in teh server
-            // and the proxy relationship is messy with the single reference "forward"
-            session.setForward(internalSession);
-            internalSession.setForward(session);
-            SessionPair sessionPair = new SessionPair(internalSession,session);
-            //System.out.println(":::: ADDING  Internal "+internalSession.getId()+" :::::::");
-            //System.out.println(":::: AND THE External "+session.getId()+" :::::::");
-            waitingList.put(internalSession.getCtx().toString(),sessionPair);
             return null;
         }
             

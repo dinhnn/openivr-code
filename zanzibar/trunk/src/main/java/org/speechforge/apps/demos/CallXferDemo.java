@@ -62,7 +62,7 @@ public class CallXferDemo extends Speechlet implements SpeechEventListener {
         try {
             sClient = this.getContext().getSpeechClient();
             tClient = this.getContext().getTelephonyClient();
-            channelName = this.getContext().getExternalSession().getChannelName();
+            channelName = this.getContext().getPBXSession().getChannelName();
             sClient.turnOnBargeIn();
             String result = "";  // results string to prepend to the prompt
             sClient.enableDtmf("[0-9]{4}", this, 0, 0);

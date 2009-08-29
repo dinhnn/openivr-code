@@ -48,7 +48,7 @@ public abstract class Speechlet implements Runnable, SessionProcessor {
 	    }
 
 	    public void recognitionEventReceived(MrcpEvent arg0, RecognitionResult arg1) {
-	    	SipSession sipSession = _context.getExternalSession();
+	    	SipSession sipSession = _context.getPBXSession();
 	    	try {
 	            sipSession.getAgent().sendInfoRequest(sipSession, "application", "mrcp-event", arg0.toString());
             } catch (SipException e) {
@@ -58,7 +58,7 @@ public abstract class Speechlet implements Runnable, SessionProcessor {
 	    }
 
 	    public void speechSynthEventReceived(MrcpEvent arg0) {
-	    	SipSession sipSession = _context.getExternalSession();
+	    	SipSession sipSession = _context.getPBXSession();
 	    	try {
 	            sipSession.getAgent().sendInfoRequest(sipSession, "application", "mrcp-event", arg0.toString());
             } catch (SipException e) {
@@ -88,7 +88,7 @@ public abstract class Speechlet implements Runnable, SessionProcessor {
      * @see org.speechforge.modules.common.dialog.SessionProcessor#getId()
      */
     public String getId() {
-        return this._context.getExternalSession().getId();
+        return this._context.getPBXSession().getId();
     }
 
     /* (non-Javadoc)
@@ -105,7 +105,7 @@ public abstract class Speechlet implements Runnable, SessionProcessor {
     public void stop() throws SipException {
         stopFlag = true;
         //_context.getSpeechClient().hangup();
-        _context.getInternalSession().bye();
+        _context.getMRCPv2Session().bye();
     }
 
     /* (non-Javadoc)
@@ -130,7 +130,7 @@ public abstract class Speechlet implements Runnable, SessionProcessor {
      * @see org.speechforge.modules.common.dialog.SessionProcessor#getSession()
      */
     public SipSession getSession() {
-        return _context.getExternalSession();
+        return _context.getPBXSession();
     }
 
     /* (non-Javadoc)

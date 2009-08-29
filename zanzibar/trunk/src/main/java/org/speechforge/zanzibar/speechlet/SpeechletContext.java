@@ -38,22 +38,22 @@ public interface SpeechletContext {
     /**
      * @return the externalSession
      */
-    public SipSession getExternalSession();
+    public SipSession getPBXSession();
 
     /**
      * @param externalSession the externalSession to set
      */
-    public void setExternalSession(SipSession externalSession);
+    public void setPBXSession(SipSession externalSession);
 
     /**
      * @return the internalSession
      */
-    public SipSession getInternalSession();
+    public SipSession getMRCPv2Session();
 
     /**
      * @param internalSession the internalSession to set
      */
-    public void setInternalSession(SipSession internalSession);
+    public void setMRCPSession(SipSession internalSession);
     
     public void init() throws InvalidContextException;
     
