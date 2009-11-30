@@ -51,6 +51,17 @@
 		<property name="cairoSipPort">
 				    <value>5050</value>
 		</property>
+		
+		<property name="mode">
+			<value>mrcpv2</value>
+		</property>
+		<property name="baseRtpPort">
+			<value>42050</value>
+		</property>
+		<property name="maxConnects">
+			<value>50</value>
+		</property>
+		
 	</bean>
 
 	

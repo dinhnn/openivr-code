@@ -24,10 +24,13 @@ package org.speechforge.zanzibar.sip;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,21 +41,30 @@ import javax.sdp.SdpParseException;
 import javax.sip.ObjectInUseException;
 import javax.sip.SipException;
 import javax.sip.TimeoutEvent;
+
+import org.apache.commons.pool.ObjectPool;
 import org.apache.log4j.Logger;
 import org.mrcp4j.MrcpResourceType;
 import org.mrcp4j.client.MrcpChannel;
 import org.mrcp4j.client.MrcpFactory;
 import org.mrcp4j.client.MrcpProvider;
 import org.mrcp4j.message.header.IllegalValueException;
+import org.speechforge.cairo.rtp.AudioFormats;
+import org.speechforge.cairo.rtp.server.PortPairPool;
+import org.speechforge.cairo.rtp.server.RTPStreamReplicator;
+import org.speechforge.cairo.rtp.server.RTPStreamReplicatorFactory;
 import org.speechforge.cairo.sip.ResourceUnavailableException;
 import org.speechforge.cairo.sip.SdpMessage;
 import org.speechforge.cairo.sip.SessionListener;
 import org.speechforge.cairo.sip.SipAgent;
 import org.speechforge.cairo.sip.SipSession;
 import org.speechforge.zanzibar.speechlet.SessionProcessor;
+import org.speechforge.zanzibar.speechlet.SpeechletContextMrcpProvider;
 import org.speechforge.zanzibar.speechlet.SpeechletContext;
-import org.speechforge.zanzibar.speechlet.SpeechletContextImpl;
+import org.speechforge.zanzibar.speechlet.SpeechletContextMrcpv2Impl;
 import org.speechforge.zanzibar.speechlet.SpeechletService;
+
+import com.spokentech.speechdown.client.rtp.RtpTransmitter;
 
 /**
  * SipServer is the sip agent for the speech client.  It implements SessionListner, so it
@@ -86,7 +98,18 @@ public class SipServer implements SessionListener {
         private int cairoSipPort;
         private String cairoSipAddress;
         
-        private String mrcpClientHost;
+        private String mode = "mccpv2";
+
+		private int baseReceiverRtpPort;
+		private int maxConnects;
+		
+		private int baseXmitRtpPort;
+
+
+		private String clientHost;
+        private ObjectPool _replicatorPool;
+        private PortPairPool _portPairPool;
+        private String hostname;
         
         private SipAgent _sipAgent;
         
@@ -127,21 +150,99 @@ public class SipServer implements SessionListener {
             
             try {
                 InetAddress addr = InetAddress.getLocalHost();
-                mrcpClientHost = addr.getHostAddress();
+                clientHost = addr.getHostAddress();
             } catch (UnknownHostException e) {
-            	mrcpClientHost = "127.0.0.1";
+            	clientHost = "127.0.0.1";
                 _logger.debug(e, e);
                 _logger.warn("using localhost for mrcp client host name in sdp messages");
             }
             
+            if (mode.equals("cloud")) {
+               _replicatorPool = RTPStreamReplicatorFactory.createObjectPool(baseReceiverRtpPort, maxConnects);
+               _portPairPool = new PortPairPool(baseXmitRtpPort, maxConnects);
+            }
+            
         }
         
+
+        /**
+         * @return the mode
+         */
+        public String getMode() {
+        	return mode;
+        }
+
+		/**
+         * @param mode the mode to set
+         */
+        public void setMode(String mode) {
+        	this.mode = mode;
+        }
+        
+        
+    	
+		/**
+         * @return the baseXmitRtpPort
+         */
+        public int getBaseXmitRtpPort() {
+        	return baseXmitRtpPort;
+        }
+
+		/**
+         * @param baseXmitRtpPort the baseXmitRtpPort to set
+         */
+        public void setBaseXmitRtpPort(int baseXmitRtpPort) {
+        	this.baseXmitRtpPort = baseXmitRtpPort;
+        }
+        
+        /**
+         * @return the baseRtpPort
+         */
+        public int getBaseReceiverRtpPort() {
+        	return baseReceiverRtpPort;
+        }
+
+		/**
+         * @param baseRtpPort the baseRtpPort to set
+         */
+        public void setBaseReceiverRtpPort(int baseReceiverRtpPort) {
+        	this.baseReceiverRtpPort = baseReceiverRtpPort;
+        }
+
+        
+        /**
+         * @return the maxConnects
+         */
+        public int getMaxConnects() {
+        	return maxConnects;
+        }
+
+		/**
+         * @param maxConnects the maxConnects to set
+         */
+        public void setMaxConnects(int maxConnects) {
+        	this.maxConnects = maxConnects;
+        }
+
         
         public void setDefaultCairoServer(String cairoSipAddress, String cairoSipHostName, int cairoSipPort) {
             this.cairoSipAddress = cairoSipAddress;
             this.cairoSipHostName = cairoSipHostName;
             this.cairoSipPort = cairoSipPort;
             
+        }
+        
+        public static InetAddress getLocalHost() throws SocketException, UnknownHostException {
+               Enumeration<NetworkInterface> networkInterfaces =NetworkInterface.getNetworkInterfaces();
+               while (networkInterfaces.hasMoreElements()) {
+                       NetworkInterface networkInterface = networkInterfaces.nextElement();
+                       if (!networkInterface.isLoopback()) {
+                               Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
+                               if (inetAddresses.hasMoreElements())
+                                       return inetAddresses.nextElement();
+                       }
+               }
+               return InetAddress.getLocalHost();
         }
         
 
@@ -233,11 +334,7 @@ public class SipServer implements SessionListener {
                         session.setTtsChannel(ttsChannel);
                         session.setRecogChannel(recogChannel);
                         
-                        
-                        SipSession internal = pair.getExternal();
-                        SipSession external = pair.getInternal();
-
-                        pbxResponse = startupSpeechlet(remoteHostName, remoteRtpPort, supportedFormats,internal, external);
+                        pbxResponse = startupSpeechlet(remoteHostName, remoteRtpPort, supportedFormats,pair.getMrcpSession(), pair.getPbxSession());
             
                         //System.out.println(">>>>Here is the invite response:");
                         //System.out.println(pbxResponse.getSessionDescription().toString());
@@ -279,30 +376,14 @@ public class SipServer implements SessionListener {
             return pbxResponse;
         }
 
-        private SdpMessage startupSpeechlet(String remoteHostName, int remoteRtpPort, Vector supportedFormats, SipSession internal, SipSession external) throws UnknownHostException, SdpException, Exception {
+        private SdpMessage startupSpeechlet(String remoteHostName, int remoteRtpPort, Vector supportedFormats, SipSession mrcpSession, SipSession pbxSession) throws UnknownHostException, SdpException, Exception {
 			SdpMessage pbxResponse;
 			pbxResponse = constructInviteResponseToPbx(remoteRtpPort, remoteHostName, supportedFormats);
 	
-			_sipAgent.sendResponse(external, pbxResponse);
+			_sipAgent.sendResponse(pbxSession, pbxResponse);
 	
-			// setup the context (for speechlet to communicate back to container and access to container services)
-			SpeechletContext c = new SpeechletContextImpl();
-	
-			// The context needs a reference to the conatiner
-			((SpeechletContextImpl) c).setContainer(dialogService);
-	
-			// The context needs both the internal and external sessions
-			((SpeechletContext) c).setPBXSession(external); // **** This is the original
-			((SpeechletContext) c).setMRCPSession(internal);
-	
-			// create the actual speechlet (running in a thread within the session processor)
-			SessionProcessor d = dialogService.startNewDialog(c);
-	
-			// the sessionprocessor needs a referenece to the context
-			d.setContext(c);
-	
-			// the context also needs a reference to the speechlet
-			((SpeechletContextImpl) c).setSpeechlet(d);
+			dialogService.startNewMrcpDialog(pbxSession, mrcpSession);
+			
 			return pbxResponse;
 		}
                         
@@ -370,18 +451,34 @@ public class SipServer implements SessionListener {
             }
 
             
-            String mode = "mccpv2";
-            if (mode == "cloud") {
+
+            if (mode.equals("cloud")) {
             	
-            	//create the rtp receiver
-            	//create the rtp transmitter
-            	//put in the sesssion
-            	//create the dialogObject and and to the pool of active dialogs.
+  
+            	RTPStreamReplicator replicator = null;
+                try {
+	                replicator = (RTPStreamReplicator) _replicatorPool.borrowObject();
             	
-            } else if (mode == "mrcpv2") {
-            
-            
-	            
+                    AudioFormats af = AudioFormats.constructWithSdpVector(pbxFormats);
+	                Vector supportedFormats = af.filterOutUnSupportedFormatsInOffer();                    
+                    
+	        		pbxResponse = constructInviteResponseToPbx(replicator.getPort(), clientHost, supportedFormats);
+	    			_sipAgent.sendResponse(session, pbxResponse);
+   
+	        		
+	        		InetAddress address = InetAddress.getByName(pbxHost);
+	        		int  localPort = _portPairPool.borrowPort();
+	              	RtpTransmitter rtpTransmitter = new RtpTransmitter(localPort, address, pbxRtpPort,af );
+
+	                dialogService.startNewCloudDialog(session,replicator,rtpTransmitter);
+                } catch (Exception e) {
+	                // TODO Auto-generated catch block
+	                e.printStackTrace();
+                }
+            	
+
+            } else if (mode.equals("mrcpv2")) {
+             
 	            //construct the invite request and send it to the cairo resource server to get the resources for the session
 	            //TODO: check which resource needed in the original invite (from pbx).  the construct method below blindly gets a tts and recog resoruce
 	            SdpMessage message = null;
@@ -396,7 +493,7 @@ public class SipServer implements SessionListener {
 	                // TODO Auto-generated catch block
 	                e1.printStackTrace();
 	            }
-	            //these sessions are linked thru a stateful proxy.  
+	            //these sessions are linked
 	            //the forward attribute is not good enough (one side is the backwrds lookup)
 	            //TODO: Session rediesign.  It has become a bucket of things that are sometmes needed in the client and sometimes in teh server
 	            // and the proxy relationship is messy with the single reference "forward"
@@ -413,7 +510,7 @@ public class SipServer implements SessionListener {
    
         
         private  SdpMessage constructInviteRequestToCairo(int pbxRtpPort,String pbxHost,String pbxSessionName,Vector pbxFormats) throws UnknownHostException, SdpException {
-            SdpMessage sdpMessage = SdpMessage.createNewSdpSessionMessage(mySipAddress, mrcpClientHost, pbxSessionName);
+            SdpMessage sdpMessage = SdpMessage.createNewSdpSessionMessage(mySipAddress, clientHost, pbxSessionName);
             MediaDescription rtpChannel = SdpMessage.createRtpChannelRequest(pbxRtpPort,pbxFormats,pbxHost);
             //rtpChannel.getMedia().setMediaFormats(pbxFormats);
             MediaDescription synthControlChannel = SdpMessage.createMrcpChannelRequest(MrcpResourceType.SPEECHSYNTH);
@@ -549,37 +646,37 @@ public class SipServer implements SessionListener {
         }
         
         private class SessionPair {
-            private SipSession internal;
-            private SipSession external;
+            private SipSession mrcpSession;
+            private SipSession pbxSession;
             
             public SessionPair(SipSession i, SipSession e) {
-                internal = i;
-                external = e;
+                mrcpSession = i;
+                pbxSession = e;
             }
             
             /**
-             * @return the external
+             * @return the pbx session
              */
-            public SipSession getExternal() {
-                return external;
+            public SipSession getPbxSession() {
+                return pbxSession;
             }
             /**
-             * @param external the external to set
+             * @param external the pbxSession to set
              */
-            public void setExternal(SipSession external) {
-                this.external = external;
+            public void setPbxSession(SipSession external) {
+                this.pbxSession = external;
             }
             /**
-             * @return the internal
+             * @return the mrcp sesion
              */
-            public SipSession getInternal() {
-                return internal;
+            public SipSession getMrcpSession() {
+                return mrcpSession;
             }
             /**
-             * @param internal the internal to set
+             * @param internal the mrcp session to set
              */
-            public void setInternal(SipSession internal) {
-                this.internal = internal;
+            public void setMrcpSession(SipSession internal) {
+                this.mrcpSession = internal;
             }
             
         }

@@ -22,39 +22,13 @@
  */
 package org.speechforge.zanzibar.speechlet;
 
-import org.speechforge.cairo.sip.SipSession;
 import org.speechforge.cairo.client.SpeechClient;
+import org.speechforge.cairo.sip.SipSession;
 import org.speechforge.zanzibar.telephony.TelephonyClient;
 
-public interface SpeechletContext {
+public interface SpeechletContext  {
    
-    /**
-     * Notify the container that the speechlets Dialog has completed.  Typically the container will end the session(s) with the remote
-     * party or parties (perhaps via SIP).  And return the resources that were allocated to this speechlet.
-     * @throws InvalidContextException 
-     */
-    public void dialogCompleted() throws InvalidContextException;
 
-    /**
-     * @return the externalSession
-     */
-    public SipSession getPBXSession();
-
-    /**
-     * @param externalSession the externalSession to set
-     */
-    public void setPBXSession(SipSession externalSession);
-
-    /**
-     * @return the internalSession
-     */
-    public SipSession getMRCPv2Session();
-
-    /**
-     * @param internalSession the internalSession to set
-     */
-    public void setMRCPSession(SipSession internalSession);
-    
     public void init() throws InvalidContextException;
     
     /**
@@ -66,4 +40,42 @@ public interface SpeechletContext {
      * @return the telephonyClient
      */
     public TelephonyClient getTelephonyClient();
+    
+    /**
+     * Notify the container that the speechlets Dialog has completed.  Typically the container will end the session(s) with the remote
+     * party or parties (perhaps via SIP).  And return the resources that were allocated to this speechlet.
+     * @throws InvalidContextException 
+     */
+    public void dialogCompleted() throws InvalidContextException;
+
+	/**
+     * @return the container
+     */
+    public SpeechletService getContainer();
+
+	/**
+     * @param container the container to set
+     */
+    public void setContainer(SpeechletService container);
+
+	/**
+     * @return the speechlet
+     */
+    public SessionProcessor getSpeechlet();
+
+	/**
+     * @param speechlet the speechlet to set
+     */
+    public void setSpeechlet(SessionProcessor speechlet);
+    
+	/**
+	 * @return the externalSession
+	 */
+	public SipSession getPBXSession();
+
+	/**
+	 * @param externalSession the externalSession to set
+	 */
+	public void setPBXSession(SipSession externalSession);
+
 }

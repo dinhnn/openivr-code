@@ -34,12 +34,11 @@ import org.speechforge.cairo.client.SpeechClientImpl;
 import org.speechforge.zanzibar.telephony.TelephonyClient;
 import org.speechforge.zanzibar.telephony.TelephonyClientImpl;
 
-public class SpeechletContextImpl implements SpeechletContext {
+public class SpeechletContextMrcpv2Impl implements SpeechletContext, SpeechletContextMrcpProvider {
     
-    private SpeechletService container;
-    private SessionProcessor speechlet;
+    SpeechletService container;
+    SessionProcessor speechlet;
     
-    //TODO: Rename these pbx session and mrcp session!
     SipSession mrcpSession;
     SipSession pbxSession;
     

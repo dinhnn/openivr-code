@@ -25,6 +25,8 @@ package org.speechforge.zanzibar.jvoicexml.impl;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import javax.media.rtp.InvalidSessionAddressException;
 import javax.sip.SipException;
 import org.apache.log4j.Logger;
 import org.jvoicexml.ImplementationPlatform;
@@ -36,7 +38,9 @@ import org.speechforge.cairo.client.recog.RecognitionResult;
 import org.speechforge.cairo.sip.SipSession;
 import org.speechforge.zanzibar.server.SpeechletServerMain;
 import org.speechforge.zanzibar.speechlet.SessionProcessor;
+import org.speechforge.zanzibar.speechlet.SpeechletContextMrcpProvider;
 import org.speechforge.zanzibar.speechlet.SpeechletContext;
+import org.speechforge.zanzibar.speechlet.SpeechletContextMrcpv2Impl;
 import org.speechforge.cairo.client.NoMediaControlChannelException;
 import org.speechforge.cairo.client.SpeechClient;
 import org.speechforge.cairo.client.SpeechEventListener;
@@ -68,7 +72,9 @@ public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, Spe
 
     public void stop() throws SipException {
         jvxmlSession.hangup();
-        _context.getMRCPv2Session().bye();
+        if (_context instanceof SpeechletContextMrcpv2Impl)
+        	((SpeechletContextMrcpv2Impl)_context).getMRCPv2Session().bye();
+
     }
 
     public void recognitionEventReceived(MrcpEvent event, RecognitionResult r) {
@@ -85,6 +91,9 @@ public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, Spe
             // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (NoMediaControlChannelException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+        } catch (InvalidSessionAddressException e) {
 	        // TODO Auto-generated catch block
 	        e.printStackTrace();
         }       

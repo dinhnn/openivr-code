@@ -30,10 +30,13 @@ import javax.sip.SipException;
 import javax.sip.address.SipURI;
 import javax.sip.address.URI;
 import org.apache.log4j.Logger;
+import org.speechforge.cairo.rtp.server.RTPStreamReplicator;
 import org.speechforge.cairo.sip.SipSession;
 import org.speechforge.zanzibar.server.SpeechletServerMain;
 import org.speechforge.cairo.client.SpeechClient;
 import org.speechforge.cairo.client.SpeechClientProvider;
+
+import com.spokentech.speechdown.client.rtp.RtpTransmitter;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -74,9 +77,56 @@ public class ApplicationByNumberService implements SpeechletService {
         dialogs = null;
     }
 
-    /* (non-Javadoc)
-     * @see com.speechdynamix.mrcp.client.DialogService#startNewDialog(org.speechforge.cairo.util.sip.SipSession)
-     */
+    public SpeechletContext startNewMrcpDialog(SipSession pbxSession, SipSession mrcpSession) throws Exception {
+        
+		// setup the context (for speechlet to communicate back to container and access to container services)
+		SpeechletContext c = new SpeechletContextMrcpv2Impl();
+	
+		// The context needs a reference to the conatiner
+		((SpeechletContext) c).setContainer(this);
+	
+		// The context needs both the internal and external sessions
+		c.setPBXSession(pbxSession);
+		((SpeechletContextMrcpProvider) c).setMRCPSession(mrcpSession);
+	
+		// create the actual speechlet (running in a thread within the session processor)
+		SessionProcessor d = this.startNewDialog(c);
+	
+		// the sessionprocessor needs a referenece to the context
+		d.setContext(c);
+	
+		// the context also needs a reference to the speechlet
+		((SpeechletContext) c).setSpeechlet(d);
+		
+		return c;
+	
+    }
+	public SpeechletContext startNewCloudDialog(SipSession pbxSession, RTPStreamReplicator rtpReplicator, RtpTransmitter rtpTransmitter ) throws Exception {
+		// setup the context (for speechlet to communicate back to container and access to container services)
+		SpeechletContext c = new SpeechletContextCloudImpl();
+	
+		// The context needs a reference to the conatiner
+		((SpeechletContext) c).setContainer(this);
+	
+		// The context needs both the internal and external sessions
+		c.setPBXSession(pbxSession); 
+		
+		((SpeechletContextCloudProvider) c).setRtpReplicator(rtpReplicator);
+		((SpeechletContextCloudProvider) c).setRtpTransmitter(rtpTransmitter);
+		
+		// create the actual speechlet (running in a thread within the session processor)
+		SessionProcessor d = this.startNewDialog(c);
+	
+		// the sessionprocessor needs a referenece to the context
+		d.setContext(c);
+	
+		// the context also needs a reference to the speechlet
+		((SpeechletContext) c).setSpeechlet(d);
+		
+		return c;
+    }
+    
+
     public SessionProcessor startNewDialog(SpeechletContext context) throws Exception {
 
         //Get the Application name from the Sip TO Header. Theis Dialog Services uses the phone number called as the name of the application/session/dialog to run
@@ -93,7 +143,7 @@ public class ApplicationByNumberService implements SpeechletService {
 
         
         _logger.debug("session id:" +session.getId());
-        _logger.debug("session id.forward:" +session.getForward().getId());
+        //_logger.debug("session id.forward:" +session.getForward().getId());
         if (aname == null) 
             throw new Exception("No Application Specified");
         
@@ -204,5 +254,7 @@ public class ApplicationByNumberService implements SpeechletService {
     public void setInstrumentation(boolean instrumentation) {
     	this.instrumentation = instrumentation;
     }
+
+
 
 }

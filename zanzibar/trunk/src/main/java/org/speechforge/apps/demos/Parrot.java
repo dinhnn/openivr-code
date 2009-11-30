@@ -23,6 +23,9 @@
 package org.speechforge.apps.demos;
 
 import java.io.IOException;
+
+import javax.media.rtp.InvalidSessionAddressException;
+
 import org.apache.log4j.Logger;
 import org.mrcp4j.client.MrcpInvocationException;
 import org.mrcp4j.message.MrcpEvent;
@@ -51,7 +54,7 @@ public class Parrot extends Speechlet implements SpeechEventListener {
         super();
     }
 
-    protected  void  runApplication() throws NoMediaControlChannelException {
+    protected  void  runApplication() throws NoMediaControlChannelException, InvalidSessionAddressException {
         try {
             SpeechClient sClient = this.getContext().getSpeechClient();
             sClient.turnOnBargeIn();

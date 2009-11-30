@@ -23,6 +23,9 @@
 package org.speechforge.apps.demos;
 
 import java.io.IOException;
+
+import javax.media.rtp.InvalidSessionAddressException;
+
 import org.apache.log4j.Logger;
 import org.asteriskjava.manager.TimeoutException;
 import org.mrcp4j.client.MrcpInvocationException;
@@ -58,7 +61,7 @@ public class CallXferDemo extends Speechlet implements SpeechEventListener {
         super();
     }
 
-    protected  void  runApplication() throws NoMediaControlChannelException {
+    protected  void  runApplication() throws NoMediaControlChannelException,InvalidSessionAddressException {
         try {
             sClient = this.getContext().getSpeechClient();
             tClient = this.getContext().getTelephonyClient();

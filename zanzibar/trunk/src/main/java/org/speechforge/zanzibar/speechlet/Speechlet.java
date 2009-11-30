@@ -22,6 +22,7 @@
  */
 package org.speechforge.zanzibar.speechlet;
 
+import javax.media.rtp.InvalidSessionAddressException;
 import javax.sip.SipException;
 
 import org.apache.log4j.Logger;
@@ -105,7 +106,8 @@ public abstract class Speechlet implements Runnable, SessionProcessor {
     public void stop() throws SipException {
         stopFlag = true;
         //_context.getSpeechClient().hangup();
-        _context.getMRCPv2Session().bye();
+        if (_context instanceof SpeechletContextMrcpv2Impl)
+        	((SpeechletContextMrcpv2Impl)_context).getMRCPv2Session().bye();
     }
 
     /* (non-Javadoc)
@@ -164,14 +166,20 @@ public abstract class Speechlet implements Runnable, SessionProcessor {
         } catch (NoMediaControlChannelException e) {
 	        // TODO Auto-generated catch block
 	        e.printStackTrace();
+        } catch (InvalidSessionAddressException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+
+	        
         }
     }
     
     /**
      * Run application.
      * @throws NoMediaControlChannelException 
+     * @throws InvalidSessionAddressException 
      */
-    protected abstract void  runApplication() throws NoMediaControlChannelException;
+    protected abstract void  runApplication() throws NoMediaControlChannelException, InvalidSessionAddressException;
 
 	/**
      * @return the instrumentation

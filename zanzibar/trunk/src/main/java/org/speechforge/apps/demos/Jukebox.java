@@ -23,6 +23,9 @@
 package org.speechforge.apps.demos;
 
 import java.io.IOException;
+
+import javax.media.rtp.InvalidSessionAddressException;
+
 import org.mrcp4j.client.MrcpInvocationException;
 import org.mrcp4j.message.MrcpEvent;
 import org.mrcp4j.message.header.IllegalValueException;
@@ -118,6 +121,9 @@ public class Jukebox extends Speechlet implements SpeechEventListener {
         } catch (IllegalStateException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        } catch (InvalidSessionAddressException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
         }
     }
 

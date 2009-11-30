@@ -8,6 +8,7 @@
       <rtpBasePort>42050</rtpBasePort>
       <maxConnects>50</maxConnects>
       <engines>10</engines>
+      <recorderEngines>5</recorderEngines>
       <baseRecordingDir>/temp/cairo/recordingDir</baseRecordingDir>
       <baseGrammarDir>/temp/cairo/baseGrammarDir</baseGrammarDir>
       <!-- uncomment the following line to override sphinx config file in cairo.jar (generally you should not need to do this) -->

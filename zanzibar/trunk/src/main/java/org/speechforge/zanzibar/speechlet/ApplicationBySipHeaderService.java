@@ -28,11 +28,14 @@ import java.util.Map;
 import javax.sip.SipException;
 
 import org.apache.log4j.Logger;
+import org.speechforge.cairo.rtp.server.RTPStreamReplicator;
 import org.speechforge.cairo.sip.SipSession;
 import org.speechforge.zanzibar.jvoicexml.impl.VoiceXmlSessionProcessor;
 import org.speechforge.zanzibar.server.SpeechletServerMain;
 import org.speechforge.cairo.client.SpeechClient;
 import org.speechforge.cairo.client.SpeechClientProvider;
+
+import com.spokentech.speechdown.client.rtp.RtpTransmitter;
 
 
 /**
@@ -48,7 +51,7 @@ public class ApplicationBySipHeaderService implements SpeechletService {
     //contains the active Dialogs   (TODO: Maybe should rename Dialog to Speech Applications or Speech Sessions)
     private  Map<String, SessionProcessor> dialogs;
     
-    private SpeechletContext _context;
+
 
     private boolean instrumentation;
     
@@ -73,12 +76,61 @@ public class ApplicationBySipHeaderService implements SpeechletService {
         dialogs = null;
     }
 
-    /* (non-Javadoc)
-     * @see com.speechdynamix.mrcp.client.DialogService#startNewDialog(org.speechforge.cairo.util.sip.SipSession)
-     */
+    public SpeechletContext startNewMrcpDialog(SipSession pbxSession, SipSession mrcpSession) throws Exception {
+    
+		// setup the context (for speechlet to communicate back to container and access to container services)
+		SpeechletContext c = new SpeechletContextMrcpv2Impl();
+	
+		// The context needs a reference to the conatiner
+		((SpeechletContext) c).setContainer(this);
+	
+		// The context needs both the internal and external sessions
+		c.setPBXSession(pbxSession); 
+		((SpeechletContextMrcpProvider) c).setMRCPSession(mrcpSession);
+	
+		// create the actual speechlet (running in a thread within the session processor)
+		SessionProcessor d = this.startNewDialog(c);
+	
+		// the sessionprocessor needs a referenece to the context
+		d.setContext(c);
+	
+		// the context also needs a reference to the speechlet
+		((SpeechletContext) c).setSpeechlet(d);
+		
+		return c;
+	
+    }
+
+	public SpeechletContext startNewCloudDialog(SipSession pbxSession, RTPStreamReplicator rtpReplicator, RtpTransmitter rtpTransmitter ) throws Exception {
+		// setup the context (for speechlet to communicate back to container and access to container services)
+		SpeechletContext c = new SpeechletContextCloudImpl();
+	
+		// The context needs a reference to the conatiner
+		((SpeechletContext) c).setContainer(this);
+	
+		// The context needs both the internal and external sessions
+		c.setPBXSession(pbxSession); 
+		
+		((SpeechletContextCloudProvider) c).setRtpReplicator(rtpReplicator);
+		((SpeechletContextCloudProvider) c).setRtpTransmitter(rtpTransmitter);
+	
+		// create the actual speechlet (running in a thread within the session processor)
+		SessionProcessor d = this.startNewDialog(c);
+	
+		// the sessionprocessor needs a referenece to the context
+		d.setContext(c);
+	
+		// the context also needs a reference to the speechlet
+		((SpeechletContext) c).setSpeechlet(d);
+		
+		return c;
+    }
+	
+
     public SessionProcessor startNewDialog(SpeechletContext context) throws Exception {
 
-        _context = context;
+    	
+    	//SpeechletContextMrcpProvider _context = context;
        
         // Get the application name (origninally set  in the underlying platform.  and sent in the sip header
         // It is of the form applicationType|applicationName (for example vxml:HelloWorld or basic|Parrot)
@@ -198,5 +250,7 @@ public class ApplicationBySipHeaderService implements SpeechletService {
     public void setInstrumentation(boolean instrumentation) {
     	this.instrumentation = instrumentation;
     }
+
+
 
 }

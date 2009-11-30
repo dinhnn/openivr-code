@@ -105,6 +105,7 @@
         <include>org.speechforge:cairo-sip</include>
         <include>org.speechforge:cairo-client</include>
         <include>org.speechforge:cairo-rtp</include>
+        <include>org.speechforge:cairo</include>
         <include>commons-logging:commons-logging</include>
         <include>commons-lang:commons-lang</include>
         <include>commons-cli:commons-cli</include>
@@ -130,11 +131,15 @@
         <include>commons-codec:commons-codec</include>
         <include>com.sun.xml.stream:sjsxp</include>
         <include>javax.xml.stream:stax-api</include>
-        <include>org.speechforge:cairo</include>
         <include>freetts:freetts</include>
         <include>sphinx:sphinx4</include>
+        <include>com.spokentech:speechcloud-client</include>
         <include>sphinx:WSJ_8gau_13dCep_16k_40mel_130Hz_6800Hz</include>
         <include>sphinx:WSJ_8gau_13dCep_8kHz_31mel_200Hz_3500Hz</include>
+        <include>org.apache.httpcomponents:httpcomponents-client</include>
+        <include>org.apache.httpcomponents:httpcomponents-core</include>
+        <include>org.apache.httpcomponents:httpcomponents-mime</include>
+        <include>org.apache.httpcomponents:httpcomponents-mime4j</include>
       </includes>
     </dependencySet>
   </dependencySets>

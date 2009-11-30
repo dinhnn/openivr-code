@@ -216,8 +216,8 @@
       <id>central</id>
       <name>Maven Repository Switchboard</name>
       <layout>default</layout>
-      <!--url>http://www.ibiblio.org/maven2</url-->
-      <url>http://repo1.maven.org/maven2</url>
+      <url>http://www.ibiblio.org/maven2</url>
+      <!--url>http://repo1.maven.org/maven2</url-->
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
@@ -246,14 +246,14 @@
     <dependency>
       <groupId>org.speechforge</groupId>
       <artifactId>cairo-sip</artifactId>
-      <version>0.2</version>
+      <version>SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     
     <dependency>
       <groupId>org.speechforge</groupId>
       <artifactId>cairo-rtp</artifactId>
-      <version>0.1</version>
+      <version>SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
 
@@ -264,6 +264,16 @@
       <version>SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>    
+    
+
+    
+    
+    <dependency>
+      <groupId>com.spokentech</groupId>
+      <artifactId>speechcloud-client</artifactId>
+      <version>SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
 
     <!-- Need to install this artifact separately for license reasons! -->
     <!-- Download jsapi.exe to your java ext dir (jre/lib/ext) and execute to extract the jsapi jar file. -->
@@ -315,15 +325,15 @@
         <version>2.0</version>
      </dependency>
      
-     <!-- TODO: cairo server should only need to be a runtime dependency -->
-     <dependency>
+
+    <!-- runtime scope dependencies -->
+    
+    <dependency>
       <groupId>org.speechforge</groupId>
       <artifactId>cairo</artifactId>
       <version>SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-
-    <!-- runtime scope dependencies -->
+      <scope>runtime</scope>
+    </dependency>  
   
     <!-- jvoicexml depends on this -->
     <dependency>
@@ -362,6 +372,36 @@
       <groupId>javax.xml.stream</groupId>
       <artifactId>stax-api</artifactId>
       <version>1.0</version>
+      <scope>runtime</scope>
+    </dependency>
+    
+    
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpcomponents-client</artifactId>
+      <version>4.0-beta2</version>
+      <scope>runtime</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpcomponents-core</artifactId>
+      <version>4.0</version>
+      <scope>runtime</scope>
+    </dependency>
+    
+       <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpcomponents-mime</artifactId>
+      <version>4.0-beta2</version>
+      <scope>runtime</scope>
+    </dependency>
+     
+    
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpcomponents-mime4j</artifactId>
+      <version>0.5</version>
       <scope>runtime</scope>
     </dependency>
     

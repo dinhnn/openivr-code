@@ -31,6 +31,19 @@
 		<property name="cairoSipPort">
 				    <value>5050</value>
 		</property>
+		
+		<property name="mode">
+			<value>cloud</value>
+		</property>
+				<property name="baseReceiverRtpPort">
+			<value>42150</value>
+		</property>
+		<property name="baseXmitRtpPort">
+			<value>42050</value>
+		</property>
+		<property name="maxConnects">
+			<value>50</value>
+		</property>
 	</bean>
 
 	

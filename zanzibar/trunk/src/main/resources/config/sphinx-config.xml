@@ -523,7 +523,7 @@
                type="edu.cmu.sphinx.linguist.dictionary.FastDictionary">
         <property name="dictionaryPath" value="resource:/edu.cmu.sphinx.model.acoustic.WSJ_8gau_13dCep_8kHz_31mel_200Hz_3500Hz.Model!/edu/cmu/sphinx/model/acoustic/WSJ_8gau_13dCep_8kHz_31mel_200Hz_3500Hz/dict/cmudict.0.6d"/>
         <property name="fillerPath" value="resource:/edu.cmu.sphinx.model.acoustic.WSJ_8gau_13dCep_8kHz_31mel_200Hz_3500Hz.Model!/edu/cmu/sphinx/model/acoustic/WSJ_8gau_13dCep_8kHz_31mel_200Hz_3500Hz/dict/fillerdict"/>
-		<!--property name="addenda" value="resource:/org.speechforge.cairo.server.recog.sphinx.SphinxRecEngine!/grammar/addendum.dict"/-->
+		<!--property name="addenda" value="resource:/org.speechforge.server.recog.sphinx.SphinxRecEngine!/grammar/addendum.dict"/-->
         <property name="addSilEndingPronunciation" value="false"/>
         <property name="allowMissingWords" value="false"/>
         <property name="unitManager" value="unitManager"/>
@@ -579,7 +579,7 @@
     </component>
 
     <component name="primaryInput1"
-               type="org.speechforge.cairo.server.recog.sphinx.RawAudioProcessor"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.RawAudioProcessor"/>
 
     <component name="speechClassifier1"
                type="edu.cmu.sphinx.frontend.endpoint.SpeechClassifier">
@@ -597,10 +597,10 @@
     </component>
 
     <component name="speechDataMonitor1"
-               type="org.speechforge.cairo.server.recog.sphinx.SpeechDataMonitor"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.SpeechDataMonitor"/>
 
     <component name="speechDataRecorder1"
-               type="org.speechforge.cairo.server.recog.sphinx.SpeechDataRecorder"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.SpeechDataRecorder"/>
 
     <component name="nonSpeechDataFilter1"
                type="edu.cmu.sphinx.frontend.endpoint.NonSpeechDataFilter">
@@ -660,7 +660,7 @@
     </component>
 
     <component name="primaryInput2"
-               type="org.speechforge.cairo.server.recog.sphinx.RawAudioProcessor"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.RawAudioProcessor"/>
 
     <component name="speechClassifier2"
                type="edu.cmu.sphinx.frontend.endpoint.SpeechClassifier">
@@ -678,10 +678,10 @@
     </component>
 
     <component name="speechDataMonitor2"
-               type="org.speechforge.cairo.server.recog.sphinx.SpeechDataMonitor"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.SpeechDataMonitor"/>
 
     <component name="speechDataRecorder2"
-               type="org.speechforge.cairo.server.recog.sphinx.SpeechDataRecorder"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.SpeechDataRecorder"/>
 
     <component name="nonSpeechDataFilter2"
                type="edu.cmu.sphinx.frontend.endpoint.NonSpeechDataFilter">
@@ -741,7 +741,7 @@
     </component>
 
     <component name="primaryInput3"
-               type="org.speechforge.cairo.server.recog.sphinx.RawAudioProcessor"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.RawAudioProcessor"/>
 
     <component name="speechClassifier3"
                type="edu.cmu.sphinx.frontend.endpoint.SpeechClassifier">
@@ -759,10 +759,10 @@
     </component>
 
     <component name="speechDataMonitor3"
-               type="org.speechforge.cairo.server.recog.sphinx.SpeechDataMonitor"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.SpeechDataMonitor"/>
 
     <component name="speechDataRecorder3"
-               type="org.speechforge.cairo.server.recog.sphinx.SpeechDataRecorder"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.SpeechDataRecorder"/>
 
     <component name="nonSpeechDataFilter3"
                type="edu.cmu.sphinx.frontend.endpoint.NonSpeechDataFilter">
@@ -822,7 +822,7 @@
     </component>
 
     <component name="primaryInput4"
-               type="org.speechforge.cairo.server.recog.sphinx.RawAudioProcessor"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.RawAudioProcessor"/>
 
     <component name="speechClassifier4"
                type="edu.cmu.sphinx.frontend.endpoint.SpeechClassifier">
@@ -840,10 +840,10 @@
     </component>
 
     <component name="speechDataMonitor4"
-               type="org.speechforge.cairo.server.recog.sphinx.SpeechDataMonitor"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.SpeechDataMonitor"/>
 
     <component name="speechDataRecorder4"
-               type="org.speechforge.cairo.server.recog.sphinx.SpeechDataRecorder"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.SpeechDataRecorder"/>
 
     <component name="nonSpeechDataFilter4"
                type="edu.cmu.sphinx.frontend.endpoint.NonSpeechDataFilter">
@@ -903,7 +903,7 @@
     </component>
 
     <component name="primaryInput5"
-               type="org.speechforge.cairo.server.recog.sphinx.RawAudioProcessor"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.RawAudioProcessor"/>
 
     <component name="speechClassifier5"
                type="edu.cmu.sphinx.frontend.endpoint.SpeechClassifier">
@@ -921,10 +921,10 @@
     </component>
 
     <component name="speechDataMonitor5"
-               type="org.speechforge.cairo.server.recog.sphinx.SpeechDataMonitor"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.SpeechDataMonitor"/>
 
     <component name="speechDataRecorder5"
-               type="org.speechforge.cairo.server.recog.sphinx.SpeechDataRecorder"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.SpeechDataRecorder"/>
 
     <component name="nonSpeechDataFilter5"
                type="edu.cmu.sphinx.frontend.endpoint.NonSpeechDataFilter">
@@ -984,7 +984,7 @@
     </component>
 
     <component name="primaryInput6"
-               type="org.speechforge.cairo.server.recog.sphinx.RawAudioProcessor"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.RawAudioProcessor"/>
 
     <component name="speechClassifier6"
                type="edu.cmu.sphinx.frontend.endpoint.SpeechClassifier">
@@ -1002,10 +1002,10 @@
     </component>
 
     <component name="speechDataMonitor6"
-               type="org.speechforge.cairo.server.recog.sphinx.SpeechDataMonitor"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.SpeechDataMonitor"/>
 
     <component name="speechDataRecorder6"
-               type="org.speechforge.cairo.server.recog.sphinx.SpeechDataRecorder"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.SpeechDataRecorder"/>
 
     <component name="nonSpeechDataFilter6"
                type="edu.cmu.sphinx.frontend.endpoint.NonSpeechDataFilter">
@@ -1065,7 +1065,7 @@
     </component>
 
     <component name="primaryInput7"
-               type="org.speechforge.cairo.server.recog.sphinx.RawAudioProcessor"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.RawAudioProcessor"/>
 
     <component name="speechClassifier7"
                type="edu.cmu.sphinx.frontend.endpoint.SpeechClassifier">
@@ -1083,10 +1083,10 @@
     </component>
 
     <component name="speechDataMonitor7"
-               type="org.speechforge.cairo.server.recog.sphinx.SpeechDataMonitor"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.SpeechDataMonitor"/>
 
     <component name="speechDataRecorder7"
-               type="org.speechforge.cairo.server.recog.sphinx.SpeechDataRecorder"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.SpeechDataRecorder"/>
 
     <component name="nonSpeechDataFilter7"
                type="edu.cmu.sphinx.frontend.endpoint.NonSpeechDataFilter">
@@ -1146,7 +1146,7 @@
     </component>
 
     <component name="primaryInput8"
-               type="org.speechforge.cairo.server.recog.sphinx.RawAudioProcessor"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.RawAudioProcessor"/>
 
     <component name="speechClassifier8"
                type="edu.cmu.sphinx.frontend.endpoint.SpeechClassifier">
@@ -1164,10 +1164,10 @@
     </component>
 
     <component name="speechDataMonitor8"
-               type="org.speechforge.cairo.server.recog.sphinx.SpeechDataMonitor"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.SpeechDataMonitor"/>
 
     <component name="speechDataRecorder8"
-               type="org.speechforge.cairo.server.recog.sphinx.SpeechDataRecorder"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.SpeechDataRecorder"/>
 
     <component name="nonSpeechDataFilter8"
                type="edu.cmu.sphinx.frontend.endpoint.NonSpeechDataFilter">
@@ -1227,7 +1227,7 @@
     </component>
 
     <component name="primaryInput9"
-               type="org.speechforge.cairo.server.recog.sphinx.RawAudioProcessor"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.RawAudioProcessor"/>
 
     <component name="speechClassifier9"
                type="edu.cmu.sphinx.frontend.endpoint.SpeechClassifier">
@@ -1245,10 +1245,10 @@
     </component>
 
     <component name="speechDataMonitor9"
-               type="org.speechforge.cairo.server.recog.sphinx.SpeechDataMonitor"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.SpeechDataMonitor"/>
 
     <component name="speechDataRecorder9"
-               type="org.speechforge.cairo.server.recog.sphinx.SpeechDataRecorder"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.SpeechDataRecorder"/>
 
     <component name="nonSpeechDataFilter9"
                type="edu.cmu.sphinx.frontend.endpoint.NonSpeechDataFilter">
@@ -1310,7 +1310,7 @@
     </component>
 
     <component name="primaryInput10"
-               type="org.speechforge.cairo.server.recog.sphinx.RawAudioProcessor"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.RawAudioProcessor"/>
 
     <component name="speechClassifier10"
                type="edu.cmu.sphinx.frontend.endpoint.SpeechClassifier">
@@ -1328,10 +1328,10 @@
     </component>
 
     <component name="speechDataMonitor10"
-               type="org.speechforge.cairo.server.recog.sphinx.SpeechDataMonitor"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.SpeechDataMonitor"/>
 
     <component name="speechDataRecorder10"
-               type="org.speechforge.cairo.server.recog.sphinx.SpeechDataRecorder"/>
+               type="org.speechforge.cairo.rtp.server.sphinx.SpeechDataRecorder"/>
 
     <component name="nonSpeechDataFilter10"
                type="edu.cmu.sphinx.frontend.endpoint.NonSpeechDataFilter">
