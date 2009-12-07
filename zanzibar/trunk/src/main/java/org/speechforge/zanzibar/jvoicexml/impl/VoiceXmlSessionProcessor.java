@@ -77,7 +77,7 @@ public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, Spe
 
     }
 
-    public void recognitionEventReceived(MrcpEvent event, RecognitionResult r) {
+    public void recognitionEventReceived(SpeechEventType event, RecognitionResult r) {
         _logger.debug("Recog result: "+r.getText());
         try {
             _context.getSpeechClient().playBlocking(false,r.getText());
@@ -99,7 +99,7 @@ public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, Spe
         }       
     }
 
-    public void speechSynthEventReceived(MrcpEvent event) {
+    public void speechSynthEventReceived(SpeechEventType event) {
         // TODO Auto-generated method stub       
     }
     
@@ -164,7 +164,7 @@ public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, Spe
     }
 
 
-    public void characterEventReceived(String c, EventType status) {
+    public void characterEventReceived(String c, DtmfEventType status) {
         // TODO Auto-generated method stub
         _logger.info("Character Event! status= "+ status+" code= "+c);
         
@@ -207,12 +207,12 @@ public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, Spe
 
     public class InstrumentationListener implements SpeechEventListener {
 
-	    public void characterEventReceived(String arg0, EventType arg1) {
+	    public void characterEventReceived(String arg0, DtmfEventType arg1) {
 		    // TODO Auto-generated method stub
 
 	    }
 
-	    public void recognitionEventReceived(MrcpEvent arg0, RecognitionResult arg1) {
+	    public void recognitionEventReceived(SpeechEventType arg0, RecognitionResult arg1) {
 	    	SipSession sipSession = _context.getPBXSession();
 	    	try {
 	            sipSession.getAgent().sendInfoRequest(sipSession, "application", "mrcp-event", arg0.toString());
@@ -222,7 +222,7 @@ public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, Spe
             }
 	    }
 
-	    public void speechSynthEventReceived(MrcpEvent arg0) {
+	    public void speechSynthEventReceived(SpeechEventType arg0) {
 	    	SipSession sipSession = _context.getPBXSession();
 	    	try {
 	            sipSession.getAgent().sendInfoRequest(sipSession, "application", "mrcp-event", arg0.toString());

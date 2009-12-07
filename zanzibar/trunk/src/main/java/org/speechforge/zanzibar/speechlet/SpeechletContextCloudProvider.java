@@ -10,8 +10,7 @@ public interface SpeechletContextCloudProvider {
     public RTPStreamReplicator getRtpReplicator();
 
     public void setRtpReplicator(RTPStreamReplicator rtpReplicator);
-
-
+    
 	public RtpTransmitter getRtpTransmitter();
 
 	public void setRtpTransmitter(RtpTransmitter rtpTransmitter);

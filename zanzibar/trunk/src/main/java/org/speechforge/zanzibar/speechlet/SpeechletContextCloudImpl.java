@@ -25,7 +25,7 @@ public class SpeechletContextCloudImpl implements SpeechletContext, SpeechletCon
     SpeechClient speechClient;
     TelephonyClient telephonyClient;
     
-	RTPStreamReplicator rtpReplicator = null;
+    RTPStreamReplicator rtpReplicator= null;
 	RtpTransmitter rtpTransmitter = null;
     
     SipSession pbxSession;  

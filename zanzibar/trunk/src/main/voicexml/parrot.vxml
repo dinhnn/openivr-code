@@ -15,7 +15,7 @@
       <prompt> 
 	  Would you like to hear the weather, get sports news or hear a stock quote?  Say quit to exit. 
       </prompt>
-      <grammar src="http://localhost:8080/voicexml/parrot.gram" type="application/jsgf"/>
+      <grammar src="file:///work/zanzibar/src/main/voicexml/parrot.gram" type="application/x-jsgf"/>
       <filled>
          <prompt> <value expr="main"/> </prompt>
          <if cond="main=='quit'">

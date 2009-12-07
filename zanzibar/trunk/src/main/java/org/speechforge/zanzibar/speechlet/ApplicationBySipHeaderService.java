@@ -28,6 +28,7 @@ import java.util.Map;
 import javax.sip.SipException;
 
 import org.apache.log4j.Logger;
+import org.speechforge.cairo.rtp.server.RTPStreamReader;
 import org.speechforge.cairo.rtp.server.RTPStreamReplicator;
 import org.speechforge.cairo.sip.SipSession;
 import org.speechforge.zanzibar.jvoicexml.impl.VoiceXmlSessionProcessor;
@@ -51,9 +52,10 @@ public class ApplicationBySipHeaderService implements SpeechletService {
     //contains the active Dialogs   (TODO: Maybe should rename Dialog to Speech Applications or Speech Sessions)
     private  Map<String, SessionProcessor> dialogs;
     
+	private String cloudUrl;
 
 
-    private boolean instrumentation;
+	private boolean instrumentation;
     
     /**
      * Instantiates a new dialog service impl.
@@ -76,7 +78,7 @@ public class ApplicationBySipHeaderService implements SpeechletService {
         dialogs = null;
     }
 
-    public SpeechletContext startNewMrcpDialog(SipSession pbxSession, SipSession mrcpSession) throws Exception {
+    public void startNewMrcpDialog(SipSession pbxSession, SipSession mrcpSession) throws Exception {
     
 		// setup the context (for speechlet to communicate back to container and access to container services)
 		SpeechletContext c = new SpeechletContextMrcpv2Impl();
@@ -97,11 +99,11 @@ public class ApplicationBySipHeaderService implements SpeechletService {
 		// the context also needs a reference to the speechlet
 		((SpeechletContext) c).setSpeechlet(d);
 		
-		return c;
+
 	
     }
 
-	public SpeechletContext startNewCloudDialog(SipSession pbxSession, RTPStreamReplicator rtpReplicator, RtpTransmitter rtpTransmitter ) throws Exception {
+	public void startNewCloudDialog(SipSession pbxSession, RTPStreamReplicator rtpReplicator, RtpTransmitter rtpTransmitter ) throws Exception {
 		// setup the context (for speechlet to communicate back to container and access to container services)
 		SpeechletContext c = new SpeechletContextCloudImpl();
 	
@@ -122,8 +124,7 @@ public class ApplicationBySipHeaderService implements SpeechletService {
 	
 		// the context also needs a reference to the speechlet
 		((SpeechletContext) c).setSpeechlet(d);
-		
-		return c;
+
     }
 	
 
@@ -252,5 +253,18 @@ public class ApplicationBySipHeaderService implements SpeechletService {
     }
 
 
+    /**
+     * @return the cloudUrl
+     */
+    public String getCloudUrl() {
+    	return cloudUrl;
+    }
+
+	/**
+     * @param cloudUrl the cloudUrl to set
+     */
+    public void setCloudUrl(String cloudUrl) {
+    	this.cloudUrl = cloudUrl;
+    }
 
 }

@@ -30,10 +30,13 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 import javax.sdp.MediaDescription;
 import javax.sdp.SdpException;
@@ -52,6 +55,7 @@ import org.mrcp4j.message.header.IllegalValueException;
 import org.speechforge.cairo.rtp.AudioFormats;
 import org.speechforge.cairo.rtp.server.PortPairPool;
 import org.speechforge.cairo.rtp.server.RTPStreamReplicator;
+
 import org.speechforge.cairo.rtp.server.RTPStreamReplicatorFactory;
 import org.speechforge.cairo.sip.ResourceUnavailableException;
 import org.speechforge.cairo.sip.SdpMessage;
@@ -125,6 +129,8 @@ public class SipServer implements SessionListener {
         private SdpMessage _message;
 
         Map<String, SessionPair> waitingList;
+        
+        Set<String> calleeRegistry = new HashSet<String>();
          
         public SipServer() {
             super();
@@ -165,6 +171,14 @@ public class SipServer implements SessionListener {
         }
         
 
+        public boolean registerSipAddress(String sAddress) {
+        	return calleeRegistry.add(sAddress);
+        }
+
+        public boolean unRegisterSipAddress(String sAddress) {
+        	return calleeRegistry.remove(sAddress);
+        }
+        
         /**
          * @return the mode
          */
@@ -430,6 +444,9 @@ public class SipServer implements SessionListener {
 
         public SdpMessage processInviteRequest(SdpMessage request, SipSession session) throws SdpException, ResourceUnavailableException, RemoteException {
             
+        	//TODO: Check the callee registry here.  But then do ai need to check for all requests
+        	//TODO: Investigate Pushing the check down to sipAgent/Listener?
+        	
             //get the rtp channels from the invitation
             Vector pbxFormats = null;
             int pbxRtpPort = 0;
@@ -449,20 +466,29 @@ public class SipServer implements SessionListener {
                 _logger.debug(e, e);
                 throw e;
             }
-
-            
+            for (int i=0; i<pbxFormats.size(); i++) {
+                //System.out.println(i+" format type is: "+pbxFormats.get(i).getClass().getCanonicalName());
+                System.out.println("pbx format # "+i+" is: "+pbxFormats.get(i).toString());
+ 
+            }
 
             if (mode.equals("cloud")) {
             	
   
-            	RTPStreamReplicator replicator = null;
+            	RTPStreamReplicator rtpReplicator = null;
                 try {
-	                replicator = (RTPStreamReplicator) _replicatorPool.borrowObject();
+                	rtpReplicator = (RTPStreamReplicator) _replicatorPool.borrowObject();
             	
                     AudioFormats af = AudioFormats.constructWithSdpVector(pbxFormats);
-	                Vector supportedFormats = af.filterOutUnSupportedFormatsInOffer();                    
+                    _logger.info("Audio Format "+af);
+	                Vector supportedFormats = af.filterOutUnSupportedFormatsInOffer();       
+	                for (int i=0; i<supportedFormats.size(); i++) {
+	                    //System.out.println(i+" format type is: "+supportedFormats.get(i).getClass().getCanonicalName());
+	                    System.out.println("Supported format # "+i+" is: "+supportedFormats.get(i).toString());
+	     
+	                }
                     
-	        		pbxResponse = constructInviteResponseToPbx(replicator.getPort(), clientHost, supportedFormats);
+	        		pbxResponse = constructInviteResponseToPbx(rtpReplicator.getPort(), clientHost, supportedFormats);
 	    			_sipAgent.sendResponse(session, pbxResponse);
    
 	        		
@@ -470,7 +496,7 @@ public class SipServer implements SessionListener {
 	        		int  localPort = _portPairPool.borrowPort();
 	              	RtpTransmitter rtpTransmitter = new RtpTransmitter(localPort, address, pbxRtpPort,af );
 
-	                dialogService.startNewCloudDialog(session,replicator,rtpTransmitter);
+	                dialogService.startNewCloudDialog(session,rtpReplicator,rtpTransmitter);
                 } catch (Exception e) {
 	                // TODO Auto-generated catch block
 	                e.printStackTrace();
@@ -503,6 +529,8 @@ public class SipServer implements SessionListener {
 	            //System.out.println(":::: ADDING  Internal "+internalSession.getId()+" :::::::");
 	            //System.out.println(":::: AND THE External "+session.getId()+" :::::::");
 	            waitingList.put(internalSession.getCtx().toString(),sessionPair);
+            } else {
+            	_logger.warn("Unrecognized SipServer mode, "+mode);
             }
             return null;
         }

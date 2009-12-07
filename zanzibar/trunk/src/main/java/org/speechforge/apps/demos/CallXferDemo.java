@@ -153,15 +153,15 @@ public class CallXferDemo extends Speechlet implements SpeechEventListener {
         }
     }
 
-    public void recognitionEventReceived(MrcpEvent event, RecognitionResult r) {
+    public void recognitionEventReceived(SpeechEventType event, RecognitionResult r) {
         _logger.info("Recog Event Received: "+event.toString()+ "\nResult: "+r.getText());  
     }
 
-    public void speechSynthEventReceived(MrcpEvent event) {
+    public void speechSynthEventReceived(SpeechEventType event) {
         _logger.info("Speech Synth Event Received: "+event.toString());         
     }
 
-    public void characterEventReceived(String c, EventType status) {
+    public void characterEventReceived(String c, DtmfEventType status) {
     	_logger.info("Character Event.  Status is "+ status+".  Code is "+c);
 
     	// Use the telephony client to redirect the call to the extension entered with DTMF

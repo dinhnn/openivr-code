@@ -48,10 +48,10 @@ public interface SpeechletService {
     public abstract void shutdown();
 
     
-    public SpeechletContext startNewMrcpDialog(SipSession pbxSession, SipSession mrcpSession) throws Exception;
+    public void startNewMrcpDialog(SipSession pbxSession, SipSession mrcpSession) throws Exception;
     
     	  
-    public SpeechletContext startNewCloudDialog(SipSession pbxSession, RTPStreamReplicator rtpReplicator, RtpTransmitter rtpTransmitter ) throws Exception;
+    public void startNewCloudDialog(SipSession pbxSession, RTPStreamReplicator rtpReplicator, RtpTransmitter rtpTransmitter ) throws Exception;
     
 
     /**

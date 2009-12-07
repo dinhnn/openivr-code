@@ -49,6 +49,9 @@
 		  <property name="instrumentation">
 				 <value>false</value>
 		  </property>
+		  <property name="cloudUrl">
+			  <value>http://spokentech.net/speechcloud</value>
+		  </property>
 	</bean>
 	
 	

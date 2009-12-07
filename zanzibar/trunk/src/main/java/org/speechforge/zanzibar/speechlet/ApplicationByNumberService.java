@@ -30,6 +30,7 @@ import javax.sip.SipException;
 import javax.sip.address.SipURI;
 import javax.sip.address.URI;
 import org.apache.log4j.Logger;
+import org.speechforge.cairo.rtp.server.RTPStreamReader;
 import org.speechforge.cairo.rtp.server.RTPStreamReplicator;
 import org.speechforge.cairo.sip.SipSession;
 import org.speechforge.zanzibar.server.SpeechletServerMain;
@@ -54,7 +55,7 @@ public class ApplicationByNumberService implements SpeechletService {
     private  Map<String, SessionProcessor> dialogs;
 
     private boolean instrumentation;
-    
+	private String cloudUrl;
     
     /**
      * Instantiates a new application by number dialog service.
@@ -77,7 +78,7 @@ public class ApplicationByNumberService implements SpeechletService {
         dialogs = null;
     }
 
-    public SpeechletContext startNewMrcpDialog(SipSession pbxSession, SipSession mrcpSession) throws Exception {
+    public void startNewMrcpDialog(SipSession pbxSession, SipSession mrcpSession) throws Exception {
         
 		// setup the context (for speechlet to communicate back to container and access to container services)
 		SpeechletContext c = new SpeechletContextMrcpv2Impl();
@@ -98,10 +99,10 @@ public class ApplicationByNumberService implements SpeechletService {
 		// the context also needs a reference to the speechlet
 		((SpeechletContext) c).setSpeechlet(d);
 		
-		return c;
+
 	
     }
-	public SpeechletContext startNewCloudDialog(SipSession pbxSession, RTPStreamReplicator rtpReplicator, RtpTransmitter rtpTransmitter ) throws Exception {
+	public void startNewCloudDialog(SipSession pbxSession, RTPStreamReplicator rtpReplicator, RtpTransmitter rtpTransmitter ) throws Exception {
 		// setup the context (for speechlet to communicate back to container and access to container services)
 		SpeechletContext c = new SpeechletContextCloudImpl();
 	
@@ -123,7 +124,7 @@ public class ApplicationByNumberService implements SpeechletService {
 		// the context also needs a reference to the speechlet
 		((SpeechletContext) c).setSpeechlet(d);
 		
-		return c;
+
     }
     
 
@@ -256,5 +257,18 @@ public class ApplicationByNumberService implements SpeechletService {
     }
 
 
+    /**
+     * @return the cloudUrl
+     */
+    public String getCloudUrl() {
+    	return cloudUrl;
+    }
+
+	/**
+     * @param cloudUrl the cloudUrl to set
+     */
+    public void setCloudUrl(String cloudUrl) {
+    	this.cloudUrl = cloudUrl;
+    }
 
 }

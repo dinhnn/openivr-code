@@ -266,7 +266,12 @@
     </dependency>    
     
 
-    
+   <dependency>
+      <groupId>org.speechforge</groupId>
+      <artifactId>cairo</artifactId>
+      <version>SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>  
     
     <dependency>
       <groupId>com.spokentech</groupId>
@@ -275,6 +280,14 @@
       <scope>compile</scope>
     </dependency>
 
+
+    <dependency>
+ 		<groupId>commons-configuration</groupId>
+  		<artifactId>commons-configuration</artifactId>
+  		<version>1.2</version>
+        <scope>compile</scope>
+    </dependency>
+    
     <!-- Need to install this artifact separately for license reasons! -->
     <!-- Download jsapi.exe to your java ext dir (jre/lib/ext) and execute to extract the jsapi jar file. -->
     <!--dependency>
@@ -328,12 +341,7 @@
 
     <!-- runtime scope dependencies -->
     
-    <dependency>
-      <groupId>org.speechforge</groupId>
-      <artifactId>cairo</artifactId>
-      <version>SNAPSHOT</version>
-      <scope>runtime</scope>
-    </dependency>  
+
   
     <!-- jvoicexml depends on this -->
     <dependency>

@@ -44,6 +44,7 @@
 		<property name="maxConnects">
 			<value>50</value>
 		</property>
+
 	</bean>
 
 	
@@ -52,6 +53,9 @@
 		  init-method="startup" destroy-method="shutdown">
 		  <property name="instrumentation">
 				    <value>false</value>
+		  </property>
+		  <property name="cloudUrl">
+			<value>http://spokentech.net/speechcloud</value>
 		  </property>
 	</bean>
 

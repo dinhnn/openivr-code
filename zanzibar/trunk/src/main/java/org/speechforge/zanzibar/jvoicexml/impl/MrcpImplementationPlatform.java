@@ -191,9 +191,9 @@ public final class MrcpImplementationPlatform implements SpeechEventListener, Im
     //MRCP speech client event handlers
 
 
-    public void speechSynthEventReceived(MrcpEvent event) {
+    public void speechSynthEventReceived(SpeechEventType event) {
         _logger.debug("got a synth event: "+event.toString());
-       if (MrcpEventName.SPEAK_COMPLETE.equals(event.getEventName())) {
+       if (event == SpeechEventType.SPEAK_COMPLETE) {
            
             //keep track of the pending outputs
             outputEnded();
@@ -216,12 +216,12 @@ public final class MrcpImplementationPlatform implements SpeechEventListener, Im
 
 
  
-    public void recognitionEventReceived(MrcpEvent event, org.speechforge.cairo.client.recog.RecognitionResult r) {
+    public void recognitionEventReceived(SpeechEventType event, org.speechforge.cairo.client.recog.RecognitionResult r) {
         
         _logger.debug("got a recog event: "+event.toString());
-        MrcpEventName eventName = event.getEventName();
 
-        if (MrcpEventName.START_OF_INPUT.equals(eventName)) {    
+
+        if (event == SpeechEventType.START_OF_INPUT) {    
             //TODO: check if bargein is enabled
             if (activeOutputCount > 0) {
                 try {
@@ -236,22 +236,23 @@ public final class MrcpImplementationPlatform implements SpeechEventListener, Im
                 } 
             }
 
-        } else if (MrcpEventName.RECOGNITION_COMPLETE.equals(eventName)) {
+        } else if (event == SpeechEventType.RECOGNITION_COMPLETE) {
             
             //keep track of the pending inputs
             inputEnded();
             
-            //get the cause
-            MrcpHeader completionCauseHeader = event.getHeader(MrcpHeaderName.COMPLETION_CAUSE);
-            CompletionCause completionCause = null;
-            try {
-                completionCause = (CompletionCause) completionCauseHeader.getValueObject();
-            } catch (IllegalValueException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            //TODO: get the cause, need to pass it in event as well...now that mrcp events are no longer passed this far up the stack
+            //MrcpHeader completionCauseHeader = event.getHeader(MrcpHeaderName.COMPLETION_CAUSE);
+            //CompletionCause completionCause = null;
+            //try {
+            //    completionCause = (CompletionCause) completionCauseHeader.getValueObject();
+            //} catch (IllegalValueException e) {
+            //    // TODO Auto-generated catch block
+            //    e.printStackTrace();
+            //}
             RecognitionResult result = new Mrcpv2RecognitionResult(r);
-            if (completionCause.getCauseCode() != 0 || r.isOutOfGrammar()) {
+            //if (completionCause.getCauseCode() != 0 || r.isOutOfGrammar()) {
+            if (r.isOutOfGrammar()) {
                 resultRejected(result);
             } else {
                resultAccepted(result);
@@ -262,7 +263,7 @@ public final class MrcpImplementationPlatform implements SpeechEventListener, Im
 
 
 
-    public void characterEventReceived(String c, EventType status) {
+    public void characterEventReceived(String c, DtmfEventType status) {
         // TODO Auto-generated method stub
         _logger.debug("Character Event! status= "+ status+" code= "+c);        
     }

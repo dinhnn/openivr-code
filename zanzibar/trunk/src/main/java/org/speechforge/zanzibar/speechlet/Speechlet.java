@@ -43,12 +43,12 @@ public abstract class Speechlet implements Runnable, SessionProcessor {
 
     public class InstrumentationListener implements SpeechEventListener {
 
-	    public void characterEventReceived(String arg0, EventType arg1) {
+	    public void characterEventReceived(String arg0, DtmfEventType arg1) {
 		    // TODO Auto-generated method stub
 
 	    }
 
-	    public void recognitionEventReceived(MrcpEvent arg0, RecognitionResult arg1) {
+	    public void recognitionEventReceived(SpeechEventType arg0, RecognitionResult arg1) {
 	    	SipSession sipSession = _context.getPBXSession();
 	    	try {
 	            sipSession.getAgent().sendInfoRequest(sipSession, "application", "mrcp-event", arg0.toString());
@@ -58,7 +58,7 @@ public abstract class Speechlet implements Runnable, SessionProcessor {
             }
 	    }
 
-	    public void speechSynthEventReceived(MrcpEvent arg0) {
+	    public void speechSynthEventReceived(SpeechEventType arg0) {
 	    	SipSession sipSession = _context.getPBXSession();
 	    	try {
 	            sipSession.getAgent().sendInfoRequest(sipSession, "application", "mrcp-event", arg0.toString());
