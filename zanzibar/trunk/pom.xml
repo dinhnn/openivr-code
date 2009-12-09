@@ -246,14 +246,14 @@
     <dependency>
       <groupId>org.speechforge</groupId>
       <artifactId>cairo-sip</artifactId>
-      <version>SNAPSHOT</version>
+      <version>0.2</version>
       <scope>compile</scope>
     </dependency>
     
     <dependency>
       <groupId>org.speechforge</groupId>
       <artifactId>cairo-rtp</artifactId>
-      <version>SNAPSHOT</version>
+      <version>0.2</version>
       <scope>compile</scope>
     </dependency>
 
@@ -261,7 +261,7 @@
     <dependency>
       <groupId>org.speechforge</groupId>
       <artifactId>cairo-client</artifactId>
-      <version>SNAPSHOT</version>
+      <version>0.2</version>
       <scope>compile</scope>
     </dependency>    
     
@@ -276,7 +276,7 @@
     <dependency>
       <groupId>com.spokentech</groupId>
       <artifactId>speechcloud-client</artifactId>
-      <version>SNAPSHOT</version>
+      <version>0.5</version>
       <scope>compile</scope>
     </dependency>
 

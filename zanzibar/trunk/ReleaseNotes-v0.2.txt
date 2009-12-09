@@ -1,0 +1,34 @@
+Release Notes for Zanzibar Open IVR v0.1:
+===========================================
+Zanzibar is a complete, standards based, open source IVR.  It integrates with VOIP telephony 
+servers (such as a PBX) to receive calls.  In includes an MRCPv2  Servers to manage speech 
+recognizer and speech sythesizer resources.  Speech applications can be defined in voicexml 
+or they can be plain java programs thatuse MRCPv2 calls directly.
+
+This is the first release for the Zanzibar open IVR project.  It has been tested with the Asterisk PBX.
+
+
+
+Version History
+---------------
+
+Zanzibar v0.2 adds support for using the speech cloud server in place
+of an mrcpv2 server.
+
+Zanzibar v0.1 was the first release and integrated with a PBX using SIP
+and used an MRCPv2 server to do speech synthesis and recognition.
+
+
+Change Log for Project Cairo:
+=============================
+
+Zanzibar  v0.2:
+----------------
+* Changed embeded mrcp server configuration to use 10 rec engines
+
+* Added speech cloud server support that can be used in place of the embedded mrcp server.
+
+
+Zanzibar v0.1:
+---------------
+No prior release to compare with.

@@ -28,7 +28,6 @@ import java.util.Map;
 import javax.sip.SipException;
 
 import org.apache.log4j.Logger;
-import org.speechforge.cairo.rtp.server.RTPStreamReader;
 import org.speechforge.cairo.rtp.server.RTPStreamReplicator;
 import org.speechforge.cairo.sip.SipSession;
 import org.speechforge.zanzibar.jvoicexml.impl.VoiceXmlSessionProcessor;

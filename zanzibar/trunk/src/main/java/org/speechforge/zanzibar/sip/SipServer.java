@@ -296,7 +296,7 @@ public class SipServer implements SessionListener {
             _logger.debug("Gotta invite response, ok is: "+ok);
             SdpMessage pbxResponse = null;
             if (ok) {
-                //System.out.println(":::: "+session.getId()+" :::::::");
+                //_logger.debug(":::: "+session.getId()+" :::::::");
                 SessionPair pair = waitingList.get(session.getCtx().toString());
                 waitingList.remove(session.getCtx().toString());
 
@@ -350,8 +350,8 @@ public class SipServer implements SessionListener {
                         
                         pbxResponse = startupSpeechlet(remoteHostName, remoteRtpPort, supportedFormats,pair.getMrcpSession(), pair.getPbxSession());
             
-                        //System.out.println(">>>>Here is the invite response:");
-                        //System.out.println(pbxResponse.getSessionDescription().toString());
+                        //_logger.debug(">>>>Here is the invite response:");
+                        //_logger.debug(pbxResponse.getSessionDescription().toString());
 
                     } catch (UnknownHostException e) {
                         // TODO Auto-generated catch block
@@ -460,32 +460,31 @@ public class SipServer implements SessionListener {
                 for (MediaDescription md : request.getRtpChannels()) {
                     pbxRtpPort = md.getMedia().getMediaPort();
                     pbxFormats = md.getMedia().getMediaFormats(true);
-                    //System.out.println("Individual Media connection address: "+ md.getConnection().getAddress());
+                    //_logger.debug("Individual Media connection address: "+ md.getConnection().getAddress());
                 }
             } catch (SdpException e) {
                 _logger.debug(e, e);
                 throw e;
             }
-            for (int i=0; i<pbxFormats.size(); i++) {
-                //System.out.println(i+" format type is: "+pbxFormats.get(i).getClass().getCanonicalName());
-                System.out.println("pbx format # "+i+" is: "+pbxFormats.get(i).toString());
- 
+            if (_logger.isDebugEnabled()) {
+	            for (int i=0; i<pbxFormats.size(); i++) {
+	                _logger.debug("pbx format # "+i+" is: "+pbxFormats.get(i).toString());
+	            }
             }
 
             if (mode.equals("cloud")) {
-            	
-  
+
             	RTPStreamReplicator rtpReplicator = null;
                 try {
                 	rtpReplicator = (RTPStreamReplicator) _replicatorPool.borrowObject();
-            	
                     AudioFormats af = AudioFormats.constructWithSdpVector(pbxFormats);
                     _logger.info("Audio Format "+af);
-	                Vector supportedFormats = af.filterOutUnSupportedFormatsInOffer();       
-	                for (int i=0; i<supportedFormats.size(); i++) {
-	                    //System.out.println(i+" format type is: "+supportedFormats.get(i).getClass().getCanonicalName());
-	                    System.out.println("Supported format # "+i+" is: "+supportedFormats.get(i).toString());
-	     
+	                Vector supportedFormats = af.filterOutUnSupportedFormatsInOffer();
+	                if (_logger.isDebugEnabled()) {
+		                for (int i=0; i<supportedFormats.size(); i++) {
+		                    //_logger.debug(i+" format type is: "+supportedFormats.get(i).getClass().getCanonicalName());
+		                	 _logger.debug("Supported format # "+i+" is: "+supportedFormats.get(i).toString());
+		                }
 	                }
                     
 	        		pbxResponse = constructInviteResponseToPbx(rtpReplicator.getPort(), clientHost, supportedFormats);
@@ -526,8 +525,8 @@ public class SipServer implements SessionListener {
 	            session.setForward(internalSession);
 	            internalSession.setForward(session);
 	            SessionPair sessionPair = new SessionPair(internalSession,session);
-	            //System.out.println(":::: ADDING  Internal "+internalSession.getId()+" :::::::");
-	            //System.out.println(":::: AND THE External "+session.getId()+" :::::::");
+	            //_logger.debug(":::: ADDING  Internal "+internalSession.getId()+" :::::::");
+	            //_logger.debug(":::: AND THE External "+session.getId()+" :::::::");
 	            waitingList.put(internalSession.getCtx().toString(),sessionPair);
             } else {
             	_logger.warn("Unrecognized SipServer mode, "+mode);

@@ -30,7 +30,6 @@ import javax.sip.SipException;
 import javax.sip.address.SipURI;
 import javax.sip.address.URI;
 import org.apache.log4j.Logger;
-import org.speechforge.cairo.rtp.server.RTPStreamReader;
 import org.speechforge.cairo.rtp.server.RTPStreamReplicator;
 import org.speechforge.cairo.sip.SipSession;
 import org.speechforge.zanzibar.server.SpeechletServerMain;

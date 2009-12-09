@@ -13,6 +13,17 @@ or the cairo-client speech library.  Zanzibar also provides the
 capability to deploy and run your speech applications using VoiceXML. 
 
 
+
+New Features for Zanzibar v${project.version}
+----------------------------------
+* Changed embeded mrcp server configuration to use 10 rec engines
+
+* Added speech cloud server support that can be used in place of the embedded mrcp server. To use speech cloud service:
+  - you just need the zanziabr speech server (no need for the mrcp server processes)
+  - Configure sipService for mode=cloud and specify baseReceiverRtpPort,  baseXmitRtpPort and maxConnects
+  - configure the url for the cloud speech service in the Dialog service (cloudUrl parameter)
+
+
 Limitations for Zanzibar v${project.version}
 --------------------------
 This is the first release of zanzibar.  See General limitation section.
@@ -149,58 +160,85 @@ The server is configured via a spring configuration file that is passed in on th
   
 You must configure the sip service.  the sip services is used for both receiving incoming calls and setting up MRCPv2 channels.  Below is an example of 
 the SipService configuration.  This is where you specify where to find the mrcp Server (cairoSipHostName and cairoSipPort).  Also specify the sip 
-transport (UDP or TCP).  Note that the same transport is used for both mrcp server and for incoming calls (pbx).  The port that the service uses for 
-incoming calls and requests from the mrcp server  (the paramater port).
+transport (UDP or TCP).  Note that the same transport is used for both mrcp server and for incoming calls (pbx).  The ports that the service uses for 
+incoming calls and requests from the mrcp server is specified here as well (the paramater port).
+
+With the addition of v0.2, you can specify the server mode as either cloud or mrcpv2.  When using cloud mode, you must also specify the rtp ports
+that will be used for transmitting and receiving.  Note that this is not needed in mrcpv2 mode, since teh rtp streams go directly to the mrcpv2
+server.  Thus the ports are specified there in the cairo-config file.
      
-  +---------------------------------------------------------------------------------------+
-  |	<bean id="sipService" class="org.speechforge.zanzibar.sip.SipServer"                  |
+  +-----------------------------------------------------------------------------------------------+
+  |	<bean id="sipService" class="org.speechforge.zanzibar.sip.SipServer"                      |
   |		init-method="startup" destroy-method="shutdown">                                  |
   |		<property name="dialogService"><ref bean="dialogService"/></property>             |
   |		<property name="mySipAddress">                                                    |
-  |				    <value>sip:cairogate@speechforge.org</value>                          |
+  |		         <value>sip:cairogate@speechforge.org</value>                             |
   |		</property>                                                                       |
   |		<property name="stackName">                                                       |
-  |				    <value>Sip Stack</value>                                              |
+  |                      <value>Sip Stack</value>                                                 |
   |		</property>                                                                       |
   |		<property name="port">                                                            |
-  |				    <value>5090</value>                                                   |
+  |		         <value>5090</value>                                                      |
   |		</property>                                                                       |
   |		<property name="transport">                                                       |
-  |				    <value>UDP</value>                                                    |
+  |		         <value>UDP</value>                                                       |
   |		</property>                                                                       |
   |		<property name="cairoSipAddress">                                                 |
-  |				    <value>sip:cairo@speechforge.org</value>                              |
+  |		        <value>sip:cairo@speechforge.org</value>                                  |
   |		</property>                                                                       |
   |		<property name="cairoSipHostName">                                                |
-  |				    <value>localhost</value>                                              |
+  |			<value>localhost</value>                                                  |
   |		</property>                                                                       |
   |		<property name="cairoSipPort">                                                    |
-  |				    <value>5050</value>                                                   |
+  |	  	        <value>5050</value>                                                       |
   |		</property>                                                                       |
-  |	</bean>                                                                               |
-  +---------------------------------------------------------------------------------------+
+  |                                                                                               |
+  |		<property name="mode">                                                            |
+  |			<value>cloud</value>                                                      |
+  |		</property>                                                                       |
+  |		<property name="baseReceiverRtpPort">                                             |
+  |			<value>42150</value>                                                      |
+  |		</property>                                                                       |
+  |		<property name="baseXmitRtpPort">                                                 |
+  |			<value>42050</value>                                                      |
+  |		</property>                                                                       |
+  |		<property name="maxConnects">                                                     |
+  |			<value>50</value>                                                         |
+  |		</property>                                                                       |
+  |                                                                                               |
+  |	</bean>                                                                                   |
+  +-----------------------------------------------------------------------------------------------+
 
 You must setup a dialog service.  There are two dialogServices available with this release the Application by number service and the application by
 sip header service.  the Application by number service is used in the demo configuration.  It selects an application based on the number dialed.
 The application by sip header service is used in the asterisk integration mode.  This can be used with an asterisk dialplan.  Where you can select
 an application in the dialplan and then specify the application to be run in a custom sip header.  See integration with Asterisk dialplan section 
 below for more details.
+
+Note the addition of the cloudUrl parameter.  This is needed only when in cloud mode (as specified by the mode parameter in the 
+sipservice component.
 	
-  +-----------------------------------------------------------------------------------+	
+  +---------------------------------------------------------------------------------------+	
   |	<bean id="dialogService"                                                          |
   |	      class="org.speechforge.zanzibar.speechlet.ApplicationByNumberService"       |
-  |		  init-method="startup" destroy-method="shutdown">                            |
+  |		  init-method="startup" destroy-method="shutdown">                        |
+  |	   <property name="cloudUrl">                                                     |
+  |		<value>http://spokentech.net/speechcloud</value>                          |
+  |	   </property>                                                                    |
   |	</bean>                                                                           |
-  +-----------------------------------------------------------------------------------+
+  +---------------------------------------------------------------------------------------+
   
   OR
   
-  +------------------------------------------------------------------------------------+
-  |	<bean id="dialogService"                                                           |
-  |	      class="org.speechforge.zanzibar.speechlet.ApplicationBySipHeaderService"     |
-  |		  init-method="startup" destroy-method="shutdown">                             |
-  |	</bean>                                                                            |
-  +------------------------------------------------------------------------------------+ 
+  +---------------------------------------------------------------------------------------+
+  |	<bean id="dialogService"                                                          |
+  |	      class="org.speechforge.zanzibar.speechlet.ApplicationBySipHeaderService"    |
+  |		  init-method="startup" destroy-method="shutdown">                        |
+  |	   <property name="cloudUrl">                                                     |
+  |		<value>http://spokentech.net/speechcloud</value>                          |
+  |	   </property>                                                                    |
+  |	</bean>                                                                           |
+  +---------------------------------------------------------------------------------------+ 
   
   
 When using the application by number dialog service.  You must configure you Speech applications with the beanId set to the "number"  

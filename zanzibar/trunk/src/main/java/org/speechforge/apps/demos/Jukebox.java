@@ -78,7 +78,7 @@ public class Jukebox extends Speechlet implements SpeechEventListener {
                     sClient.playBlocking(false,r.getText());
 
                     for (RuleMatch rule : r.getRuleMatches()) {
-                        System.out.println(rule.getTag()+ ":"+rule.getRule());
+                    	_logger.info(rule.getTag()+ ":"+rule.getRule());
                         if (rule.getRule().equals("main")) {
                             if (rule.getTag().equals("DYLAN"))  {
                                 sClient.playAndRecognizeBlocking(true, dylan, playGrammar, true);
