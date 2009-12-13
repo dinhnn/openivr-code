@@ -30,11 +30,13 @@ public class SpeechletContextCloudImpl implements SpeechletContext, SpeechletCon
     
     SipSession pbxSession;  
     
+    private String url = null;
+    
     public void init() throws InvalidContextException {
         if ((rtpReplicator == null) && (rtpTransmitter == null ))
             throw new InvalidContextException();
         
-        this.speechClient = new SpeechCloudClient(rtpReplicator, rtpTransmitter);
+        this.speechClient = new SpeechCloudClient(rtpReplicator, rtpTransmitter,url);
         this.telephonyClient = new TelephonyClientImpl(pbxSession.getChannelName());
     }
       
@@ -165,6 +167,14 @@ public class SpeechletContextCloudImpl implements SpeechletContext, SpeechletCon
      */
     public void setPBXSession(SipSession externalSession) {
         this.pbxSession = externalSession;
+    }
+
+
+	public void setUrl(String url) {
+		this.url = url;
+		if (speechClient != null) {
+           ((SpeechCloudClient) this.speechClient).setServiceUrl(url);
+		}
     }
 
 

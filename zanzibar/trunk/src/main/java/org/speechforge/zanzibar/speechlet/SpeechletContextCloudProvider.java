@@ -15,6 +15,6 @@ public interface SpeechletContextCloudProvider {
 
 	public void setRtpTransmitter(RtpTransmitter rtpTransmitter);
 	
-
+	public void setUrl(String url);
 
 }

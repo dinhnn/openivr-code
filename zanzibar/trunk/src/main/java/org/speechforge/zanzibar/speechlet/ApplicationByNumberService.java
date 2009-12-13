@@ -113,6 +113,7 @@ public class ApplicationByNumberService implements SpeechletService {
 		
 		((SpeechletContextCloudProvider) c).setRtpReplicator(rtpReplicator);
 		((SpeechletContextCloudProvider) c).setRtpTransmitter(rtpTransmitter);
+		((SpeechletContextCloudProvider) c).setUrl(cloudUrl);
 		
 		// create the actual speechlet (running in a thread within the session processor)
 		SessionProcessor d = this.startNewDialog(c);
