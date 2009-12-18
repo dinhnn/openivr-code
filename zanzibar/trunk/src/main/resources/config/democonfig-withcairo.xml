@@ -77,6 +77,9 @@
 		  		  <property name="cloudUrl">
 			<value>http://spokentech.net/speechcloud</value>
 		  </property>
+		  <property name="tempDirForPrompts">
+			   <value>c:/temp/</value>
+		  </property>
 	</bean>
 
     <bean id="callControl" class="org.speechforge.zanzibar.asterisk.CallControl"

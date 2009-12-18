@@ -55,6 +55,23 @@ public class ApplicationBySipHeaderService implements SpeechletService {
 
 
 	private boolean instrumentation;
+	
+	private String tempDirForPrompts;
+    
+    /**
+     * @return the tempDirForPrompts
+     */
+    public String getTempDirForPrompts() {
+    	return tempDirForPrompts;
+    }
+
+	/**
+     * @param tempDirForPrompts the tempDirForPrompts to set
+     */
+    public void setTempDirForPrompts(String tempDirForPrompts) {
+    	this.tempDirForPrompts = tempDirForPrompts;
+    }
+	
     
     /**
      * Instantiates a new dialog service impl.
@@ -111,6 +128,8 @@ public class ApplicationBySipHeaderService implements SpeechletService {
 	
 		// The context needs both the internal and external sessions
 		c.setPBXSession(pbxSession); 
+		
+		rtpTransmitter.setTempDirForPrompts(tempDirForPrompts);
 		
 		((SpeechletContextCloudProvider) c).setRtpReplicator(rtpReplicator);
 		((SpeechletContextCloudProvider) c).setRtpTransmitter(rtpTransmitter);
