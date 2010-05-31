@@ -31,6 +31,7 @@ import javax.sip.SipException;
 import org.apache.log4j.Logger;
 import org.jvoicexml.ImplementationPlatform;
 import org.jvoicexml.JVoiceXmlCore;
+import org.jvoicexml.RemoteClient;
 import org.jvoicexml.Session;
 import org.mrcp4j.client.MrcpInvocationException;
 import org.mrcp4j.message.MrcpEvent;
@@ -129,7 +130,8 @@ public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, Spe
         //TODO: Fix the need to cast to the implementation and call setMRcpClient.  Maybe another i/f?...
         ((MrcpImplementationPlatform) platform).setMrcpClient(_context.getSpeechClient());
         JVoiceXmlCore core = (JVoiceXmlCore) SpeechletServerMain.context.getBean("jvoicexmlcore");
-        jvxmlSession = new org.jvoicexml.interpreter.JVoiceXmlSession(platform, core);      
+        RemoteClient dummyClient = null;
+		jvxmlSession = new org.jvoicexml.interpreter.JVoiceXmlSession(platform, core,dummyClient);      
   
         
         URI uri = null;

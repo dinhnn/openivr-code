@@ -23,7 +23,9 @@
 package org.speechforge.zanzibar.jvoicexml.impl;
 
 import org.jvoicexml.GrammarImplementation;
+import org.jvoicexml.RecognitionResult;
 import org.jvoicexml.xml.srgs.GrammarType;
+import org.jvoicexml.xml.srgs.ModeType;
 
 public final class JSGFGrammarImplementation
     implements GrammarImplementation<String> {
@@ -63,5 +65,20 @@ public final class JSGFGrammarImplementation
     public String getName() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+	public boolean accepts(RecognitionResult result) {
+	    // TODO Auto-generated method stub
+	    return false;
+    }
+
+	public boolean equals(GrammarImplementation<String> other) {
+	    // TODO Auto-generated method stub
+	    return false;
+    }
+
+	public ModeType getModeType() {
+	    // TODO Auto-generated method stub
+	    return null;
     }
 }

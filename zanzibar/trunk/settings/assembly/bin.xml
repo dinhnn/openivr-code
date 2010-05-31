@@ -33,6 +33,7 @@
       <directory>${FREETTS_HOME}/lib</directory>
       <outputDirectory>/lib</outputDirectory>
       <includes>
+        <include>freetts.jar</include>
         <include>jsapi.exe</include>
         <include>jsapi.sh</include>
         <include>cmu_us_kal.jar</include>
@@ -131,7 +132,7 @@
         <include>commons-codec:commons-codec</include>
         <include>com.sun.xml.stream:sjsxp</include>
         <include>javax.xml.stream:stax-api</include>
-        <include>freetts:freetts</include>
+        <!--include>freetts:freetts</include-->
         <include>sphinx:sphinx4</include>
         <include>com.spokentech:speechcloud-client</include>
         <include>sphinx:WSJ_8gau_13dCep_16k_40mel_130Hz_6800Hz</include>

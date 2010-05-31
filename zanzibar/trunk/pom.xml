@@ -246,14 +246,14 @@
     <dependency>
       <groupId>org.speechforge</groupId>
       <artifactId>cairo-sip</artifactId>
-      <version>0.2</version>
+      <version>SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     
     <dependency>
       <groupId>org.speechforge</groupId>
       <artifactId>cairo-rtp</artifactId>
-      <version>0.2</version>
+      <version>SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
 
@@ -261,7 +261,7 @@
     <dependency>
       <groupId>org.speechforge</groupId>
       <artifactId>cairo-client</artifactId>
-      <version>0.2</version>
+      <version>SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>    
     
@@ -276,7 +276,7 @@
     <dependency>
       <groupId>com.spokentech</groupId>
       <artifactId>speechcloud-client</artifactId>
-      <version>0.5</version>
+      <version>SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
 
@@ -307,23 +307,25 @@
     <dependency>
         <groupId>org.jvoicexml</groupId>
         <artifactId>jvxml</artifactId>
-        <version>0.6.9292008</version>
+        <version>SNAPSHOT</version>
+        <!--version>0.6.9292008</version-->
         <scope>compile</scope>
      </dependency>
      
      <dependency>
         <groupId>org.jvoicexml</groupId>
         <artifactId>jvxml-xml</artifactId>
-        <version>0.6.9292008</version>
+        <version>SNAPSHOT</version>
+        <!--version>0.6.9292008</version-->
         <scope>compile</scope>
      </dependency>
      
-     <dependency>
+     <!--dependency>
         <groupId>org.jvoicexml</groupId>
         <artifactId>jvxml-jsapi1.0</artifactId>
         <version>0.6.9292008</version>
         <scope>compile</scope>
-     </dependency>
+     </dependency-->
    
     <dependency>
 	   <groupId>org.asteriskjava</groupId>
@@ -342,7 +344,6 @@
     <!-- runtime scope dependencies -->
     
 
-  
     <!-- jvoicexml depends on this -->
     <dependency>
       <groupId>rhino</groupId>

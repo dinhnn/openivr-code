@@ -29,7 +29,9 @@ package org.speechforge.zanzibar.jvoicexml.impl;
 import javax.speech.recognition.RuleGrammar;
 
 import org.jvoicexml.GrammarImplementation;
+import org.jvoicexml.RecognitionResult;
 import org.jvoicexml.xml.srgs.GrammarType;
+import org.jvoicexml.xml.srgs.ModeType;
 
 /**
  * Implementation of a JSGF grammar.
@@ -86,5 +88,20 @@ public final class RuleGrammarImplementation
     public boolean accepts(final String utterance) {
         // TODO Auto-generated method stub
         return true;
+    }
+
+	public boolean accepts(RecognitionResult result) {
+	    // TODO Auto-generated method stub
+	    return false;
+    }
+
+	public boolean equals(GrammarImplementation<RuleGrammar> other) {
+	    // TODO Auto-generated method stub
+	    return false;
+    }
+
+	public ModeType getModeType() {
+	    // TODO Auto-generated method stub
+	    return null;
     }
 }

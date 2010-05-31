@@ -55,7 +55,7 @@
 				    <value>false</value>
 		  </property>
 		  <property name="cloudUrl">
-			<value>http://spokentech.net/speechcloud</value>
+			<value>http://speechapi.com:8000/speechcloud</value>
 		  </property>
 		  <property name="tempDirForPrompts">
 			   <value>c:/temp/</value>

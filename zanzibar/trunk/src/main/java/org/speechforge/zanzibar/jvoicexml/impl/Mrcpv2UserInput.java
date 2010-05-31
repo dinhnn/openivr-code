@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.util.Collection;
+import java.util.Iterator;
+
 import javax.speech.recognition.RuleGrammar;
 
 import org.apache.log4j.Logger;
@@ -39,6 +41,7 @@ import org.jvoicexml.event.error.NoresourceError;
 import org.jvoicexml.event.error.UnsupportedFormatError;
 import org.jvoicexml.event.error.UnsupportedLanguageError;
 import org.jvoicexml.xml.srgs.GrammarType;
+import org.jvoicexml.xml.srgs.ModeType;
 import org.jvoicexml.xml.vxml.BargeInType;
 import org.speechforge.cairo.client.NoMediaControlChannelException;
 import org.speechforge.cairo.client.SpeechClient;
@@ -60,6 +63,8 @@ public class Mrcpv2UserInput implements UserInput {
     private boolean _activatedGrammarState;
     //private UserInputListener _listener;
     private int count = 0;
+
+	private String grammar;
 
     public Mrcpv2UserInput(SpeechClient client) {
         super();
@@ -104,8 +109,10 @@ public class Mrcpv2UserInput implements UserInput {
     public void startRecognition() throws NoresourceError, BadFetchError {
         _logger.debug("Mrcpv2UserInput: start recognition");
         try {
-            _loadedGrammarReader.reset();
-            client.recognize(_loadedGrammarReader, false, true, 30000);
+            //_loadedGrammarReader.reset();
+        	//not hotword, grammar is attached (not a url)
+        	_logger.warn("recognizing with grammar: "+grammar);
+            client.recognize(grammar, false, true, 30000);
             iplatform.inputStarted();
         } catch (MrcpInvocationException e) {
             // TODO Auto-generated catch block
@@ -159,7 +166,7 @@ public class Mrcpv2UserInput implements UserInput {
 
     public GrammarImplementation<?> newGrammar(final String name, 
             final GrammarType type) throws NoresourceError {
-        _logger.debug("NewGrammar ot implemented!.  creating new null grammar");
+        _logger.debug("NewGrammar not implemented!.  creating new null grammar");
         return null;
         //final RuleGrammar grammar = _grammar.getRuleGrammar();
         //return new RuleGrammarImplementation(grammar);
@@ -187,41 +194,12 @@ public class Mrcpv2UserInput implements UserInput {
                 e1.printStackTrace();
             }
 
-            
-            _logger.debug(sb.toString());
+            grammar = sb.toString();
+            _logger.debug(grammar);
             
           
             return new JSGFGrammarImplementation(sb.toString());
            
-    }
-
-
-    private boolean activateGrammar(final String name, final boolean activate) throws BadFetchError {
-        _logger.debug("Mrcpv2UserInput: activate grammar: "+ name);
-            _activatedGrammarName = name;
-            _activatedGrammarState = activate;
-            return true;
-    }
-
-
-    public void activateGrammars(final Collection<GrammarImplementation<? extends Object>> grammars) 
-            throws BadFetchError, UnsupportedLanguageError, NoresourceError {
-        _logger.debug("Calling activaeGrammars...");
-  /*      for (GrammarImplementation<? extends Object> current : grammars) {
-            final String name = current.getName();
-            _logger.debug("activating grammar '" + name + "'...");
-            activateGrammar(name, true);
-        } */
-    }
-
-
-    public void deactivateGrammars(final Collection<GrammarImplementation<? extends Object>> grammars) throws BadFetchError {
-        _logger.debug("Calling deactivaeGrammars...");
-/*        for (GrammarImplementation<? extends Object> current : grammars) {
-            String name = current.getName();
-            _logger.debug("deactivating grammar '" + name + "'...");
-            activateGrammar(name, false);
-        } */
     }
 
 
@@ -261,6 +239,40 @@ public class Mrcpv2UserInput implements UserInput {
         if (!dir.isDirectory()) {
             _logger.warn("File specified was not a directory: " + dir.getAbsolutePath());
         }
+    }
+
+
+	public void activateGrammars(Collection<GrammarImplementation<?>> grammars) throws BadFetchError,
+            UnsupportedLanguageError, NoresourceError {
+        _logger.debug("activateGrammars: "+grammars.size());
+        
+        Iterator iterator = grammars.iterator();
+        while (iterator.hasNext()) {
+        	GrammarImplementation gi = (GrammarImplementation) iterator.next();
+        	grammar = gi.getGrammar().toString();
+        }
+
+	    // TODO Auto-generated method stub
+	    
+    }
+
+
+	public void deactivateGrammars(Collection<GrammarImplementation<?>> grammars) throws NoresourceError,
+            BadFetchError {
+        _logger.debug("deactivateGrammars");
+
+	    // TODO Auto-generated method stub
+	    
+    }
+
+
+	public Collection<GrammarType> getSupportedGrammarTypes(ModeType mode) {
+	    // TODO Auto-generated method stub
+        _logger.debug("getSupportedGrammarTypes");
+        final Collection<GrammarType> types = new java.util.ArrayList<GrammarType>();
+        types.add(GrammarType.JSGF);
+        return types;
+
     }
     
 }

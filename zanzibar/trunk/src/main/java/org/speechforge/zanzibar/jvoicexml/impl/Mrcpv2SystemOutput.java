@@ -70,47 +70,7 @@ public class Mrcpv2SystemOutput implements SystemOutput {
 
     }
 
-    public void queueSpeakable(SpeakableText prompt, boolean arg1, DocumentServer server) throws NoresourceError, BadFetchError {
-        String speakText=null;
-        try {
-            //TODO: Pass on the entire SSML doc (and remove the code that extracts the text)
-            //The following code extract the text from the SSML since we do not support SSML yet (using the ssml support in jvoicexml)
-            if (prompt instanceof SpeakableSsmlText) {
-               InputStream is = null; 
-               String temp = prompt.getSpeakableText(); 
-               byte[] b = temp.getBytes();
-               is = new ByteArrayInputStream(b);
-               InputSource src = new InputSource( is);
-               SsmlDocument ssml = new SsmlDocument(src);
-               speakText = ssml.getSpeak().getTextContent();
-            } else if (prompt instanceof SpeakablePlainText) {
-                speakText = prompt.getSpeakableText();
-            }
-            //play the text
-            _logger.debug("queuing following text: "+speakText);
-            client.queuePrompt(false,speakText);
-            iplatform.outputStarted();
-        } catch (ParserConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (SAXException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (MrcpInvocationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (NoMediaControlChannelException e) {
-	        // TODO Auto-generated catch block
-	        e.printStackTrace();
-        }
-    }
-    
+
 
     public void cancelOutput() throws NoresourceError {
         _logger.debug("Mrcpv2SystemOutput cancel output method being called.  sending a bargein requets");
@@ -153,6 +113,48 @@ public class Mrcpv2SystemOutput implements SystemOutput {
 
     public void connect(RemoteClient arg0) throws IOException {
         _logger.debug("Mrcpv2SystemOutput connect method being called.  Not implemented!");
+    }
+
+	public void queueSpeakable(SpeakableText speakable, DocumentServer documentServer)
+            throws NoresourceError, BadFetchError {
+	       String speakText=null;
+	        try {
+	            //TODO: Pass on the entire SSML doc (and remove the code that extracts the text)
+	            //The following code extract the text from the SSML since we do not support SSML yet (using the ssml support in jvoicexml)
+	            if (speakable instanceof SpeakableSsmlText) {
+	               InputStream is = null; 
+	               String temp = speakable.getSpeakableText(); 
+	               byte[] b = temp.getBytes();
+	               is = new ByteArrayInputStream(b);
+	               InputSource src = new InputSource( is);
+	               SsmlDocument ssml = new SsmlDocument(src);
+	               speakText = ssml.getSpeak().getTextContent();
+	            } else if (speakable instanceof SpeakablePlainText) {
+	                speakText = speakable.getSpeakableText();
+	            }
+	            //play the text
+	            _logger.debug("queuing following text: "+speakText);
+	            client.queuePrompt(false,speakText);
+	            iplatform.outputStarted();
+	        } catch (ParserConfigurationException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        } catch (SAXException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        } catch (MrcpInvocationException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        } catch (IOException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        } catch (InterruptedException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        } catch (NoMediaControlChannelException e) {
+		        // TODO Auto-generated catch block
+		        e.printStackTrace();
+	        }
     }
 
 }

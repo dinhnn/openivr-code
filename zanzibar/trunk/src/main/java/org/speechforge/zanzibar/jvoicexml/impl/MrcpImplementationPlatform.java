@@ -337,4 +337,16 @@ public final class MrcpImplementationPlatform implements SpeechEventListener, Im
         
     }
 
+
+	public boolean hasUserInput() {
+	    // TODO Auto-generated method stub
+	    return false;
+    }
+
+
+	public void waitNonBargeInPlayed() {
+	    // TODO Auto-generated method stub
+	    
+    }
+
 }

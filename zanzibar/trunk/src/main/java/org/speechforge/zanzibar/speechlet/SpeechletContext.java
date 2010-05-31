@@ -1,7 +1,7 @@
 /*
- * Zanzibar - Open source speech application server.
+ * red5asr - Open source speech application server.
  *
- * Copyright (C) 2008-2009 Spencer Lord 
+ * Copyright (C) 2010 Spencer Lord 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
