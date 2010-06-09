@@ -133,14 +133,16 @@
         <include>com.sun.xml.stream:sjsxp</include>
         <include>javax.xml.stream:stax-api</include>
         <!--include>freetts:freetts</include-->
-        <include>sphinx:sphinx4</include>
+	<include>sphinx:sphinx4</include>
+        <include>sphinx:jsapi-1.0-base</include>
         <include>com.spokentech:speechcloud-client</include>
         <include>sphinx:WSJ_8gau_13dCep_16k_40mel_130Hz_6800Hz</include>
         <include>sphinx:WSJ_8gau_13dCep_8kHz_31mel_200Hz_3500Hz</include>
         <include>org.apache.httpcomponents:httpcomponents-client</include>
         <include>org.apache.httpcomponents:httpcomponents-core</include>
         <include>org.apache.httpcomponents:httpcomponents-mime</include>
-        <include>org.apache.httpcomponents:httpcomponents-mime4j</include>
+	<include>org.apache.httpcomponents:httpcomponents-mime4j</include>
+	<include>freetts:cmudict</include>
       </includes>
     </dependencySet>
   </dependencySets>

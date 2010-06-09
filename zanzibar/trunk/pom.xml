@@ -413,6 +413,20 @@
       <version>0.5</version>
       <scope>runtime</scope>
     </dependency>
+
+    <dependency>
+      <groupId>freetts</groupId>
+      <artifactId>cmudict</artifactId>
+      <version>04</version>
+      <scope>runtime</scope>
+    </dependency>
+
+      <dependency>
+      <groupId>freetts</groupId>
+      <artifactId>cmudict</artifactId>
+      <version>04</version>
+      <scope>runtime</scope>
+    </dependency>
     
     <!-- test scope dependencies -->
 
