@@ -8,16 +8,16 @@
   <name>Zanzibar</name>
   <version>SNAPSHOT</version>
   <description></description>
-  <url>http://${pom.artifactId}.spokentech.com</url>
+  <url>http://${project.artifactId}.spokentech.com</url>
   <inceptionYear>2008</inceptionYear>
 
 
   <mailingLists>
     <mailingList>
-      <name>${pom.artifactId}-checkin</name>
-      <subscribe>http://lists.sourceforge.net/lists/listinfo/${pom.artifactId}-checkin</subscribe>
-      <unsubscribe>http://lists.sourceforge.net/lists/listinfo/${pom.artifactId}-checkin</unsubscribe>
-      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.artifactId}-checkin</archive>
+      <name>${project.artifactId}-checkin</name>
+      <subscribe>http://lists.sourceforge.net/lists/listinfo/${project.artifactId}-checkin</subscribe>
+      <unsubscribe>http://lists.sourceforge.net/lists/listinfo/${project.artifactId}-checkin</unsubscribe>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${project.artifactId}-checkin</archive>
     </mailingList>
   </mailingLists>
 
@@ -63,10 +63,10 @@
   </licenses>
 
   <scm>
-    <connection>scm:svn:https://${pom.artifactId}.svn.sourceforge.net/svnroot/${pom.artifactId}/${pom.artifactId}/trunk</connection>
-    <developerConnection>scm:svn:https://${pom.artifactId}.svn.sourceforge.net/svnroot/${pom.artifactId}/${pom.artifactId}/trunk</developerConnection>
+    <connection>scm:svn:https://${project.artifactId}.svn.sourceforge.net/svnroot/${project.artifactId}/${project.artifactId}/trunk</connection>
+    <developerConnection>scm:svn:https://${project.artifactId}.svn.sourceforge.net/svnroot/${project.artifactId}/${project.artifactId}/trunk</developerConnection>
     <!--tag>HEAD</tag-->
-    <url>http://${pom.artifactId}.svn.sourceforge.net/viewvc/${pom.artifactId}</url>
+    <url>http://${project.artifactId}.svn.sourceforge.net/viewvc/${project.artifactId}</url>
   </scm>
 
   
@@ -79,7 +79,7 @@
 
     <directory>target</directory>
     <outputDirectory>target/classes</outputDirectory>
-    <finalName>${artifactId}-${version}</finalName>
+    <finalName>${artifactId}-${project.version}</finalName>
     <testOutputDirectory>target/test-classes</testOutputDirectory>
     <sourceDirectory>src/main/java</sourceDirectory>
     <scriptSourceDirectory>src/main/scripts</scriptSourceDirectory>
@@ -229,6 +229,18 @@
       <name>SpeechForge Repository</name>
       <url>http://www.speechforge.org/repository/</url>
     </repository>   
+
+    <repository>
+      <id>gson</id>
+      <url>http://google-gson.googlecode.com/svn/mavenrepo</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </repository>
+    
     
 
   </repositories>
@@ -283,9 +295,9 @@
 
 
     <dependency>
- 		<groupId>commons-configuration</groupId>
-  		<artifactId>commons-configuration</artifactId>
-  		<version>1.2</version>
+ 	<groupId>commons-configuration</groupId>
+  	<artifactId>commons-configuration</artifactId>
+  	<version>1.2</version>
         <scope>compile</scope>
     </dependency>
     
@@ -297,6 +309,14 @@
       <version>1.0</version>
       <scope>compile</scope>
     </dependency-->
+
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>1.6</version>
+      <scope>compile</scope>
+    </dependency>
+
 
     <dependency>
       <groupId>log4j</groupId>

@@ -46,7 +46,7 @@
 				    <value>sip:cairo@speechforge.org</value>
 		</property>
 		<property name="cairoSipHostName">
-				    <value>192.168.0.100</value>
+				    <value>192.168.10.113</value>
 		</property>
 		<property name="cairoSipPort">
 				    <value>5050</value>
@@ -85,7 +85,7 @@
     <bean id="callControl" class="org.speechforge.zanzibar.asterisk.CallControl"
 		init-method="startup" destroy-method="shutdown">
 		<property name="address">
-				    <value>192.168.0.103</value>
+				    <value>192.168.10.113</value>
 		</property>
 		<property name="name">
 				    <value>manager</value>

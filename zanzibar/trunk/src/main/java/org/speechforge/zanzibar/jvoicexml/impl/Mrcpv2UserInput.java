@@ -274,5 +274,9 @@ public class Mrcpv2UserInput implements UserInput {
         return types;
 
     }
+	
+    public boolean isBusy() {
+        return iplatform.isInputBusy();
+    }
     
 }

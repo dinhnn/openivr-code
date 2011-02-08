@@ -597,8 +597,8 @@
             <item>speechClassifier1</item>
             <item>speechMarker1</item>
             <item>speechDataMonitor1</item>
-            <item>nonSpeechDataFilter1</item>
-            <!--item>speechDataRecorder1</item-->
+            <!--item>nonSpeechDataFilter1</item-->
+            <item>speechDataRecorder1</item>
             <item>preemphasizer1</item>
             <!--item>dither1</item-->
             <item>windower1</item>
@@ -684,7 +684,7 @@
             <item>speechMarker2</item>
             <item>speechDataMonitor2</item>
             <item>nonSpeechDataFilter2</item>
-            <!--item>speechDataRecorder2</item-->
+            <item>speechDataRecorder2</item>
             <item>preemphasizer2</item>
             <!--item>dither2</item-->
             <item>windower2</item>
@@ -770,7 +770,7 @@
             <item>speechMarker3</item>
             <item>speechDataMonitor3</item>
             <item>nonSpeechDataFilter3</item>
-            <!--item>speechDataRecorder3</item-->
+            <item>speechDataRecorder3</item>
             <item>preemphasizer3</item>
             <!--item>dither3</item-->
             <item>windower3</item>

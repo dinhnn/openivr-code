@@ -349,4 +349,20 @@ public final class MrcpImplementationPlatform implements SpeechEventListener, Im
 	    
     }
 
+	public boolean isInputBusy() {
+		if (activeInputCount >0) {
+			   return true;
+		   } else {
+			   return false;
+		   }
+	    }
+
+	public boolean isOutputBusy() {
+	   if (activeOutputCount >0) {
+		   return true;
+	   } else {
+		   return false;
+	   }
+    }
+
 }

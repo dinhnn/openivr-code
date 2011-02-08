@@ -156,5 +156,9 @@ public class Mrcpv2SystemOutput implements SystemOutput {
 		        e.printStackTrace();
 	        }
     }
+	
+    public boolean isBusy() {
+        return iplatform.isOutputBusy();
+    }
 
 }

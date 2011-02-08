@@ -144,6 +144,7 @@ public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, Spe
         try {
             jvxmlSession.call(uri);
             jvxmlSession.waitSessionEnd();
+            _context.dialogCompleted();
             //jvxmlSession.hangup();
         } catch (org.jvoicexml.event.JVoiceXMLEvent e ) {
            e.printStackTrace();

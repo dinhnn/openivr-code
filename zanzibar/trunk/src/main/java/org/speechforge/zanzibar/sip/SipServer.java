@@ -62,6 +62,8 @@ import org.speechforge.cairo.sip.SdpMessage;
 import org.speechforge.cairo.sip.SessionListener;
 import org.speechforge.cairo.sip.SipAgent;
 import org.speechforge.cairo.sip.SipSession;
+import org.speechforge.cairo.util.CairoUtil;
+
 import org.speechforge.zanzibar.speechlet.SessionProcessor;
 import org.speechforge.zanzibar.speechlet.SpeechletContextMrcpProvider;
 import org.speechforge.zanzibar.speechlet.SpeechletContext;
@@ -89,7 +91,9 @@ import com.spokentech.speechdown.client.rtp.RtpTransmitter;
  * @author Spencer Lord {@literal <}<a href="mailto:salord@users.sourceforge.net">salord@users.sourceforge.net</a>{@literal >}
  */
 public class SipServer implements SessionListener {
-        private static Logger _logger = Logger.getLogger(SipServer.class);
+ 
+
+		private static Logger _logger = Logger.getLogger(SipServer.class);
         
         // properties need to be set either
         //   - call setters and then the no arg constructor then startup()(perhaps with SPring) OR
@@ -98,9 +102,10 @@ public class SipServer implements SessionListener {
         private String stackName;
         private int port;
         private String transport;
-        private String cairoSipHostName;
+        private String cairoSipHostName = null;
         private int cairoSipPort;
         private String cairoSipAddress;
+
         
         private String mode = "mccpv2";
 
@@ -109,9 +114,11 @@ public class SipServer implements SessionListener {
 		
 		private int baseXmitRtpPort;
 
+		//TODO: one of these must go!
+		private String zanzibarHostName = null;
+		private String host;
 
-		private String clientHost;
-        private ObjectPool _replicatorPool;
+		private ObjectPool _replicatorPool;
         private PortPairPool _portPairPool;
         private String hostname;
         
@@ -150,21 +157,40 @@ public class SipServer implements SessionListener {
         }
         
         
-        public void startup() throws SipException {
-            _sipAgent = new SipAgent(this, mySipAddress, stackName, port, transport);
-            waitingList = new HashMap<String, SessionPair>();
-            
+        public void startup() {
+        	_logger.info("Starting sip Server!");
+
+        	try {
+        		if (zanzibarHostName == null)
+        			zanzibarHostName = CairoUtil.getLocalHost().getHostAddress();
+
+        		if (cairoSipHostName == null)
+        			cairoSipHostName = CairoUtil.getLocalHost().getHostAddress();
+        	} catch (SocketException e2) {
+        		// TODO Auto-generated catch block
+        		e2.printStackTrace();
+        	} catch (UnknownHostException e2) {
+        		// TODO Auto-generated catch block
+        		e2.printStackTrace();
+        	}
+
             try {
-                InetAddress addr = InetAddress.getLocalHost();
-                clientHost = addr.getHostAddress();
-            } catch (UnknownHostException e) {
-            	clientHost = "127.0.0.1";
-                _logger.debug(e, e);
-                _logger.warn("using localhost for mrcp client host name in sdp messages");
+	            _sipAgent = new SipAgent(this, mySipAddress, stackName,zanzibarHostName,null, port, transport);
+            } catch (SipException e1) {
+	            // TODO Auto-generated catch block
+	            e1.printStackTrace();
             }
+            waitingList = new HashMap<String, SessionPair>();
+        	_logger.info("Returned from call to Start sip Server!");
+            
             
             if (mode.equals("cloud")) {
-               _replicatorPool = RTPStreamReplicatorFactory.createObjectPool(baseReceiverRtpPort, maxConnects);
+               try {
+				_replicatorPool = RTPStreamReplicatorFactory.createObjectPool(baseReceiverRtpPort, maxConnects,  InetAddress.getByName(zanzibarHostName));
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
                _portPairPool = new PortPairPool(baseXmitRtpPort, maxConnects);
             }
             
@@ -179,6 +205,15 @@ public class SipServer implements SessionListener {
         	return calleeRegistry.remove(sAddress);
         }
         
+        
+        public String getZanzibarHostName() {
+			return zanzibarHostName;
+		}
+
+		public void setZanzibarHostName(String zanzibarHostName) {
+			this.zanzibarHostName = zanzibarHostName;
+		}
+
         /**
          * @return the mode
          */
@@ -487,7 +522,7 @@ public class SipServer implements SessionListener {
 		                }
 	                }
                     
-	        		pbxResponse = constructInviteResponseToPbx(rtpReplicator.getPort(), clientHost, supportedFormats);
+	        		pbxResponse = constructInviteResponseToPbx(rtpReplicator.getPort(), zanzibarHostName, supportedFormats);
 	    			_sipAgent.sendResponse(session, pbxResponse);
    
 	        		
@@ -503,6 +538,8 @@ public class SipServer implements SessionListener {
             	
 
             } else if (mode.equals("mrcpv2")) {
+            	
+            	
              
 	            //construct the invite request and send it to the cairo resource server to get the resources for the session
 	            //TODO: check which resource needed in the original invite (from pbx).  the construct method below blindly gets a tts and recog resoruce
@@ -537,7 +574,7 @@ public class SipServer implements SessionListener {
    
         
         private  SdpMessage constructInviteRequestToCairo(int pbxRtpPort,String pbxHost,String pbxSessionName,Vector pbxFormats) throws UnknownHostException, SdpException {
-            SdpMessage sdpMessage = SdpMessage.createNewSdpSessionMessage(mySipAddress, clientHost, pbxSessionName);
+            SdpMessage sdpMessage = SdpMessage.createNewSdpSessionMessage(mySipAddress, zanzibarHostName, pbxSessionName);
             MediaDescription rtpChannel = SdpMessage.createRtpChannelRequest(pbxRtpPort,pbxFormats,pbxHost);
             //rtpChannel.getMedia().setMediaFormats(pbxFormats);
             MediaDescription synthControlChannel = SdpMessage.createMrcpChannelRequest(MrcpResourceType.SPEECHSYNTH);
@@ -630,6 +667,20 @@ public class SipServer implements SessionListener {
             this.port = port;
         }
 
+        /**
+         * @return the host
+         */
+        public String getHost() {
+        	return host;
+        }
+
+    	/**
+         * @param host the host to set
+         */
+        public void setHost(String host) {
+        	this.host = host;
+        }
+        
         /**
          * @return the stackName
          */
