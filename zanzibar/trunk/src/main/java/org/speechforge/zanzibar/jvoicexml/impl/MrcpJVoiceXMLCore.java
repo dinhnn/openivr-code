@@ -23,10 +23,13 @@
 package org.speechforge.zanzibar.jvoicexml.impl;
 
 import org.apache.log4j.Logger;
+import org.jvoicexml.Configuration;
+import org.jvoicexml.ConnectionInformation;
 import org.jvoicexml.DocumentServer;
 import org.jvoicexml.JVoiceXmlCore;
-import org.jvoicexml.RemoteClient;
+
 import org.jvoicexml.Session;
+import org.jvoicexml.client.mrcpv2.Mrcpv2ConnectionInformation;
 import org.jvoicexml.event.ErrorEvent;
 import org.jvoicexml.interpreter.GrammarProcessor;
 
@@ -43,7 +46,7 @@ public class MrcpJVoiceXMLCore implements JVoiceXmlCore {
         return (GrammarProcessor) SpeechletServerMain.context.getBean("grammarprocessor");
     }
 
-    public Session createSession(RemoteClient arg0) throws ErrorEvent {
+    public Session createSession(Mrcpv2ConnectionInformation arg0) throws ErrorEvent {
         _logger.debug("MrcpJVoiceXMLCore.getSession(remoteclient) called.  Not implemented.");
         return null;
     }
@@ -57,5 +60,15 @@ public class MrcpJVoiceXMLCore implements JVoiceXmlCore {
         _logger.debug("MrcpJVoiceXMLCore.shutdown() called.  Not implemented.");
 
     }
+
+	public Session createSession(ConnectionInformation arg0) throws ErrorEvent {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Configuration getConfiguration() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

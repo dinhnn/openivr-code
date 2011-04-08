@@ -27,13 +27,17 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.jvoicexml.CallControl;
 import org.jvoicexml.CharacterInput;
+import org.jvoicexml.DocumentServer;
 import org.jvoicexml.ImplementationPlatform;
 import org.jvoicexml.RecognitionResult;
 import org.jvoicexml.Session;
+import org.jvoicexml.SpeakableText;
 import org.jvoicexml.SystemOutput;
 import org.jvoicexml.UserInput;
 import org.jvoicexml.event.EventObserver;
+import org.jvoicexml.event.error.BadFetchError;
 import org.jvoicexml.event.error.NoresourceError;
+import org.jvoicexml.event.plain.ConnectionDisconnectHangupEvent;
 import org.jvoicexml.event.plain.NomatchEvent;
 import org.jvoicexml.event.plain.jvxml.RecognitionEvent;
 import org.jvoicexml.xml.vxml.BargeInType;
@@ -364,5 +368,24 @@ public final class MrcpImplementationPlatform implements SpeechEventListener, Im
 		   return false;
 	   }
     }
+
+
+	public void queuePrompt(SpeakableText arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void renderPrompts(DocumentServer arg0) throws BadFetchError,
+			NoresourceError, ConnectionDisconnectHangupEvent {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void setPromptTimeout(long arg0) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

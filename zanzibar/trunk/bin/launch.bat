@@ -107,11 +107,12 @@ goto error
 set CLASSPATH=%ZANZIBAR_JAR%
 for %%b in (%ZANZIBAR_HOME%\lib\*.jar) do set CLASSPATH=!CLASSPATH!;%%b
 
-set CLASSPATH=!CLASSPATH!;%ZANZIBAR_HOME%\config
+set CLASSPATH=!CLASSPATH!;%ZANZIBAR_HOME%\config;%ZANZIBAR_HOME%\config\jvxml;
 @REM echo CLASSPATH=%CLASSPATH%
 
 :run
-"%JAVA_HOME%\bin\java" -Xmx200m -Dlog4j.configuration=log4j.xml %*
+
+"%JAVA_HOME%\bin\java" -Djvoicexml.config=%ZANZIBAR_HOME%\config\jvxml -Xmx200m -Dlog4j.configuration=log4j.xml %*
 goto exit
 
 :error

@@ -31,11 +31,12 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.jvoicexml.DocumentServer;
-import org.jvoicexml.RemoteClient;
+
 import org.jvoicexml.SpeakablePlainText;
 import org.jvoicexml.SpeakableSsmlText;
 import org.jvoicexml.SpeakableText;
 import org.jvoicexml.SystemOutput;
+import org.jvoicexml.client.mrcpv2.Mrcpv2ConnectionInformation;
 import org.jvoicexml.event.error.BadFetchError;
 import org.jvoicexml.event.error.NoresourceError;
 
@@ -111,7 +112,7 @@ public class Mrcpv2SystemOutput implements SystemOutput {
 
     }
 
-    public void connect(RemoteClient arg0) throws IOException {
+    public void connect(Mrcpv2ConnectionInformation arg0) throws IOException {
         _logger.debug("Mrcpv2SystemOutput connect method being called.  Not implemented!");
     }
 

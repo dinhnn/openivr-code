@@ -28,7 +28,7 @@ package org.speechforge.zanzibar.jvoicexml.impl;
 
 import javax.speech.recognition.RuleGrammar;
 
-import org.jvoicexml.GrammarImplementation;
+
 import org.jvoicexml.RecognitionResult;
 import org.jvoicexml.xml.srgs.GrammarType;
 import org.jvoicexml.xml.srgs.ModeType;
@@ -48,7 +48,7 @@ import org.jvoicexml.xml.srgs.ModeType;
  * @since 0.5.5
  */
 public final class RuleGrammarImplementation
-    implements GrammarImplementation<RuleGrammar> {
+    implements org.jvoicexml.implementation.GrammarImplementation<RuleGrammar> {
     /** The encapsulated grammar. */
     private final RuleGrammar grammar;
 
@@ -95,7 +95,7 @@ public final class RuleGrammarImplementation
 	    return false;
     }
 
-	public boolean equals(GrammarImplementation<RuleGrammar> other) {
+	public boolean equals(org.jvoicexml.implementation.GrammarImplementation<RuleGrammar> other) {
 	    // TODO Auto-generated method stub
 	    return false;
     }
@@ -104,4 +104,6 @@ public final class RuleGrammarImplementation
 	    // TODO Auto-generated method stub
 	    return null;
     }
+
+
 }

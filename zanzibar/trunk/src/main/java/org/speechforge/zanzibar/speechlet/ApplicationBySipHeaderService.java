@@ -28,6 +28,7 @@ import java.util.Map;
 import javax.sip.SipException;
 
 import org.apache.log4j.Logger;
+import org.jvoicexml.JVoiceXml;
 import org.speechforge.cairo.rtp.server.RTPStreamReplicator;
 import org.speechforge.cairo.sip.SipSession;
 import org.speechforge.zanzibar.jvoicexml.impl.VoiceXmlSessionProcessor;
@@ -57,6 +58,8 @@ public class ApplicationBySipHeaderService implements SpeechletService {
 	private boolean instrumentation;
 	
 	private String tempDirForPrompts;
+
+	private JVoiceXml jvxml;
     
     /**
      * @return the tempDirForPrompts
@@ -162,7 +165,7 @@ public class ApplicationBySipHeaderService implements SpeechletService {
         _logger.debug("Starting ne dialog, app name: "+aname);
         SessionProcessor dialog = null;
         if (app[0].equals("vxml")) {
-            dialog = new VoiceXmlSessionProcessor();
+            dialog = new VoiceXmlSessionProcessor(jvxml);
         } else if (app[0].equals("beanId")) {
             // Create an instance of the Speech application/Session  usinh the application name to lookup beanId
             dialog = (SessionProcessor) SpeechletServerMain.context.getBean(app[1]);
@@ -284,6 +287,21 @@ public class ApplicationBySipHeaderService implements SpeechletService {
      */
     public void setCloudUrl(String cloudUrl) {
     	this.cloudUrl = cloudUrl;
+    }
+    
+    /**
+     * Retrieves the reference to the interpreter.
+     * @return the interpreter
+     */
+    public JVoiceXml getJvxml() {
+        return jvxml;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setJvxml( JVoiceXml jvxml) {
+       this.jvxml = jvxml;
     }
 
 }

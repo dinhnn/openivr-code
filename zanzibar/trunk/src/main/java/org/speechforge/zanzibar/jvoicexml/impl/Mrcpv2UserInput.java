@@ -33,9 +33,12 @@ import java.util.Iterator;
 import javax.speech.recognition.RuleGrammar;
 
 import org.apache.log4j.Logger;
-import org.jvoicexml.GrammarImplementation;
-import org.jvoicexml.RemoteClient;
+import org.jvoicexml.implementation.GrammarImplementation;
+import org.jvoicexml.DtmfRecognizerProperties;
+import org.jvoicexml.GrammarDocument;
+import org.jvoicexml.SpeechRecognizerProperties;
 import org.jvoicexml.UserInput;
+import org.jvoicexml.client.mrcpv2.Mrcpv2ConnectionInformation;
 import org.jvoicexml.event.error.BadFetchError;
 import org.jvoicexml.event.error.NoresourceError;
 import org.jvoicexml.event.error.UnsupportedFormatError;
@@ -99,7 +102,7 @@ public class Mrcpv2UserInput implements UserInput {
 
     }
 
-    public void connect(RemoteClient arg0) throws IOException {
+    public void connect(Mrcpv2ConnectionInformation arg0) throws IOException {
         _logger.debug("Mrcpv2UserInput activate method being called.  Not implemented!");
 
     }
@@ -242,28 +245,7 @@ public class Mrcpv2UserInput implements UserInput {
     }
 
 
-	public void activateGrammars(Collection<GrammarImplementation<?>> grammars) throws BadFetchError,
-            UnsupportedLanguageError, NoresourceError {
-        _logger.debug("activateGrammars: "+grammars.size());
-        
-        Iterator iterator = grammars.iterator();
-        while (iterator.hasNext()) {
-        	GrammarImplementation gi = (GrammarImplementation) iterator.next();
-        	grammar = gi.getGrammar().toString();
-        }
 
-	    // TODO Auto-generated method stub
-	    
-    }
-
-
-	public void deactivateGrammars(Collection<GrammarImplementation<?>> grammars) throws NoresourceError,
-            BadFetchError {
-        _logger.debug("deactivateGrammars");
-
-	    // TODO Auto-generated method stub
-	    
-    }
 
 
 	public Collection<GrammarType> getSupportedGrammarTypes(ModeType mode) {
@@ -278,5 +260,28 @@ public class Mrcpv2UserInput implements UserInput {
     public boolean isBusy() {
         return iplatform.isInputBusy();
     }
+
+
+	public void activateGrammars(Collection<GrammarDocument> arg0)
+			throws BadFetchError, UnsupportedLanguageError, NoresourceError,
+			UnsupportedFormatError {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void deactivateGrammars(Collection<GrammarDocument> arg0)
+			throws NoresourceError, BadFetchError {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void startRecognition(SpeechRecognizerProperties arg0,
+			DtmfRecognizerProperties arg1) throws NoresourceError,
+			BadFetchError {
+		// TODO Auto-generated method stub
+		
+	}
     
 }

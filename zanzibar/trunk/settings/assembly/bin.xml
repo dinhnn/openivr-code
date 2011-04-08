@@ -49,7 +49,15 @@
         <include>*.properties</include>
       </includes>
     </fileSet>
-       <fileSet>
+    <fileSet>
+       <directory>src/main/resources/config/jvxml</directory>
+       <outputDirectory>/config/jvxml</outputDirectory>
+      <includes>
+        <include>*.xml</include>
+        <include>*.xsd</include>
+      </includes>
+    </fileSet>
+    <fileSet>
       <directory>src/main/resources/grammar</directory>
       <outputDirectory>/demo/grammar</outputDirectory>
       <includes>
@@ -124,10 +132,19 @@
         <include>concurrent:concurrent</include>
         <include>jakarta-regexp:jakarta-regexp</include>
         <include>org.asteriskjava:asterisk-java</include>
-        <include>org.springframework:spring</include>
+        <include>org.springframework:spring-core</include>
+        <include>org.springframework:spring-beans</include>
+        <include>org.springframework:spring-context</include>
+        <include>org.springframework:spring-expression</include>
+        <include>org.springframework:spring-asm</include>
         <include>org.jvoicexml:jvxml</include>
         <include>org.jvoicexml:jvxml-xml</include>
-        <include>org.jvoicexml:jvxml-jsapi1.0</include>
+        <include>org.jvoicexml:jvxml-client</include>
+        <include>org.jvoicexml:jvxml-mrcpv2</include>
+        <include>org.jvoicexml:jvxml-config</include>
+        <include>org.jvoicexml:jvxml-srgs</include>
+	<!--include>org.jvoicexml:jvxml-jsapi1.0</include-->
+	<include>net.sourceforge.jchardet:jchardet</include>
         <include>rhino:js</include>
         <include>commons-httpclient:commons-httpclient</include>
         <include>commons-codec:commons-codec</include>

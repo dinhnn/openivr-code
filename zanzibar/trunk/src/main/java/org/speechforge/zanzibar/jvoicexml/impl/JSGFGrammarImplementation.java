@@ -22,8 +22,9 @@
  */
 package org.speechforge.zanzibar.jvoicexml.impl;
 
-import org.jvoicexml.GrammarImplementation;
+
 import org.jvoicexml.RecognitionResult;
+import org.jvoicexml.implementation.GrammarImplementation;
 import org.jvoicexml.xml.srgs.GrammarType;
 import org.jvoicexml.xml.srgs.ModeType;
 

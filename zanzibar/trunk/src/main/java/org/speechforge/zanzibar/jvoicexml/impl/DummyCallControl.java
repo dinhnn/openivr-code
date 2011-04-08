@@ -30,9 +30,9 @@ import javax.sound.sampled.AudioFormat;
 
 import org.apache.log4j.Logger;
 import org.jvoicexml.CallControl;
-import org.jvoicexml.RemoteClient;
 import org.jvoicexml.SystemOutput;
 import org.jvoicexml.UserInput;
+import org.jvoicexml.client.mrcpv2.Mrcpv2ConnectionInformation;
 import org.jvoicexml.event.error.NoresourceError;
 
 public final class DummyCallControl implements CallControl {
@@ -79,7 +79,7 @@ public final class DummyCallControl implements CallControl {
     /**
      * {@inheritDoc}
      */
-    public void connect(final RemoteClient client)
+    public void connect(final Mrcpv2ConnectionInformation client)
         throws IOException {
     }
 

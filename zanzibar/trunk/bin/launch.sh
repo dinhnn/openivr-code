@@ -127,6 +127,6 @@ echo CPATH=$CPATH
 #-Xms100m -Xmx200m 
 #-verbose:gc
 
-"$JAVA_HOME/bin/java" -cp $CPATH  -Xmx200m  -XX:+UseConcMarkSweepGC -Dlog4j.configuration=log4j.xml -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000 "$@"
+"$JAVA_HOME/bin/java" -cp $CPATH  -Xmx200m  -XX:+UseConcMarkSweepGC -Djvoicexml.config=$ZANZIBAR_HOME\config\jvxml -Dlog4j.configuration=log4j.xml -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000 "$@"
 exit 0
 

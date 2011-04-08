@@ -28,11 +28,18 @@ import java.net.URISyntaxException;
 
 import javax.media.rtp.InvalidSessionAddressException;
 import javax.sip.SipException;
+import javax.sip.address.Address;
+
 import org.apache.log4j.Logger;
+import org.jvoicexml.CallManager;
 import org.jvoicexml.ImplementationPlatform;
+import org.jvoicexml.JVoiceXml;
 import org.jvoicexml.JVoiceXmlCore;
-import org.jvoicexml.RemoteClient;
 import org.jvoicexml.Session;
+import org.jvoicexml.SessionListener;
+import org.jvoicexml.client.mrcpv2.Mrcpv2ConnectionInformation;
+import org.jvoicexml.event.ErrorEvent;
+import org.jvoicexml.event.error.NoresourceError;
 import org.mrcp4j.client.MrcpInvocationException;
 import org.mrcp4j.message.MrcpEvent;
 import org.speechforge.cairo.client.recog.RecognitionResult;
@@ -46,7 +53,7 @@ import org.speechforge.cairo.client.NoMediaControlChannelException;
 import org.speechforge.cairo.client.SpeechClient;
 import org.speechforge.cairo.client.SpeechEventListener;
 
-public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, SpeechEventListener{
+public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, SpeechEventListener, SessionListener{
     private static Logger _logger = Logger.getLogger(VoiceXmlSessionProcessor.class);
     //private SpeechClient client;
     //private SipSession session;
@@ -55,11 +62,16 @@ public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, Spe
     Session jvxmlSession = null;
     private SpeechletContext _context;
 	boolean instrumentation = false;
+	private JVoiceXml jvxml;
     
     
     //private static Map<String, VoiceXmlSessionProcessor> dialogs = new Hashtable<String, VoiceXmlSessionProcessor>();
 
-    public String getId() {
+    public VoiceXmlSessionProcessor(JVoiceXml jvxml) {
+		this.jvxml = jvxml;
+	}
+
+	public String getId() {
         return _context.getPBXSession().getId();
     }
 
@@ -126,12 +138,13 @@ public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, Spe
 
         stopFlag = false;        
 
+        /*  OLD CODE
         ImplementationPlatform platform = (ImplementationPlatform) SpeechletServerMain.context.getBean("implementationplatform");
         //TODO: Fix the need to cast to the implementation and call setMRcpClient.  Maybe another i/f?...
         ((MrcpImplementationPlatform) platform).setMrcpClient(_context.getSpeechClient());
         JVoiceXmlCore core = (JVoiceXmlCore) SpeechletServerMain.context.getBean("jvoicexmlcore");
         RemoteClient dummyClient = null;
-		jvxmlSession = new org.jvoicexml.interpreter.JVoiceXmlSession(platform, core,dummyClient);      
+		jvxmlSession = new org.jvoicexml.interpreter.JVoiceXmlSession(platform, core, dummyClient);      
   
         
         URI uri = null;
@@ -149,7 +162,61 @@ public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, Spe
         } catch (org.jvoicexml.event.JVoiceXMLEvent e ) {
            e.printStackTrace();
         }
+        END OLD CODE */
         
+        String calledNumber ="123";
+        String callingNumber ="456";
+        //Address remoteParty = dialog.getRemoteParty();
+        //String callingNumber = remoteParty.getURI().toString();
+        URI calledDevice = new URI(calledNumber);
+        URI callingDevice = new URI(callingNumber);
+        final Mrcpv2ConnectionInformation remote =
+            new Mrcpv2ConnectionInformation(callingDevice, calledDevice);
+        //speechClient = _context.getSpeechClient();
+		remote.setTtsClient(_context.getSpeechClient());
+        remote.setAsrClient(_context.getSpeechClient());
+
+        // Create a jvoicxml session and initiate a call at JVoiceXML.
+        Session jsession = null;
+		try {
+			jsession = jvxml.createSession(remote);
+		} catch (ErrorEvent e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        
+        //add a listener to capture the end of voicexml session event
+        jsession.addSessionListener(this);
+        
+        //add the jvoicexml session to the session bag
+       // session.setJvxmlSession(jsession);
+       // synchronized (sessions) {
+       //     sessions.put(id, session);
+       // }
+        
+        //workaround to deal with two id's
+        //maps the voicexml sessionid to sip session id 
+        //needed for case when the voicxml session ends before a hang up
+        // and need to get to close the sip session
+       // synchronized (ids) {
+       //    ids.put(jsession.getSessionID(), id);
+       // }
+
+        URI uri = null;
+        try {
+            _logger.info("app name:"+this.appUrl);
+           uri = new URI(this.appUrl);
+        } catch ( URISyntaxException e ) {
+           e.printStackTrace();
+        }
+        try {
+			jsession.call(uri);
+		} catch (ErrorEvent e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+     
     }
 
     /**
@@ -250,5 +317,13 @@ public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, Spe
     public void setInstrumentation(boolean instrumentation) {
     	this.instrumentation = instrumentation;
     }
+    
+
+
+
+	public void sessionEnded(Session arg0) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
