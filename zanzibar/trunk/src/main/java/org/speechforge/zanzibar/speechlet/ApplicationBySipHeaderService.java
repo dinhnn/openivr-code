@@ -32,6 +32,7 @@ import org.jvoicexml.JVoiceXml;
 import org.speechforge.cairo.rtp.server.RTPStreamReplicator;
 import org.speechforge.cairo.sip.SipSession;
 import org.speechforge.zanzibar.jvoicexml.impl.VoiceXmlSessionProcessor;
+import org.speechforge.zanzibar.jvoicexml.impl.VoiceXmlWrapper;
 import org.speechforge.zanzibar.server.SpeechletServerMain;
 import org.speechforge.cairo.client.SpeechClient;
 import org.speechforge.cairo.client.SpeechClientProvider;
@@ -60,6 +61,17 @@ public class ApplicationBySipHeaderService implements SpeechletService {
 	private String tempDirForPrompts;
 
 	private JVoiceXml jvxml;
+	private VoiceXmlWrapper vxml;
+
+	
+    public VoiceXmlWrapper getVxml() {
+		return vxml;
+	}
+
+	public void setVxml(VoiceXmlWrapper vxml) {
+		this.vxml = vxml;
+		this.jvxml = vxml.getJvxml();
+	}
     
     /**
      * @return the tempDirForPrompts

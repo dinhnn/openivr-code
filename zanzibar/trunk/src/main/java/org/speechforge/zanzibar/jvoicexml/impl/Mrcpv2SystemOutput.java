@@ -162,4 +162,10 @@ public class Mrcpv2SystemOutput implements SystemOutput {
         return iplatform.isOutputBusy();
     }
 
+	public void queueSpeakable(SpeakableText arg0, String arg1,
+			DocumentServer arg2) throws NoresourceError, BadFetchError {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

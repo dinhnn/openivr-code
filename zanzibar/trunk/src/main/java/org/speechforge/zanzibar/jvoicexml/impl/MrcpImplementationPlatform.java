@@ -388,4 +388,12 @@ public final class MrcpImplementationPlatform implements SpeechEventListener, Im
 		
 	}
 
+
+	public void renderPrompts(String arg0, DocumentServer arg1)
+			throws BadFetchError, NoresourceError,
+			ConnectionDisconnectHangupEvent {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

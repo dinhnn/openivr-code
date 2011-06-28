@@ -63,14 +63,26 @@ public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, Spe
     private SpeechletContext _context;
 	boolean instrumentation = false;
 	private JVoiceXml jvxml;
-    
+	private VoiceXmlWrapper vxml;
     
     //private static Map<String, VoiceXmlSessionProcessor> dialogs = new Hashtable<String, VoiceXmlSessionProcessor>();
 
     public VoiceXmlSessionProcessor(JVoiceXml jvxml) {
 		this.jvxml = jvxml;
 	}
+    
+	public VoiceXmlSessionProcessor() {
+	}
+    
+    public VoiceXmlWrapper getVxml() {
+		return vxml;
+	}
 
+	public void setVxml(VoiceXmlWrapper vxml) {
+		this.vxml = vxml;
+		this.jvxml = vxml.getJvxml();
+	}
+    
 	public String getId() {
         return _context.getPBXSession().getId();
     }
@@ -325,5 +337,20 @@ public class VoiceXmlSessionProcessor implements Runnable, SessionProcessor, Spe
 		// TODO Auto-generated method stub
 		
 	}
+	
+    /**
+     * Retrieves the reference to the interpreter.
+     * @return the interpreter
+     */
+    public JVoiceXml getJvxml() {
+        return jvxml;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setJvxml( JVoiceXml jvxml) {
+       this.jvxml = jvxml;
+    }
 	
 }

@@ -42,6 +42,7 @@
   <classpathentry kind="var" path="M2_REPO/isorelax/isorelax/20020414/isorelax-20020414.jar" sourcepath="M2_REPO/isorelax/isorelax/20020414/isorelax-20020414-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/jakarta-regexp/jakarta-regexp/1.4/jakarta-regexp-1.4.jar"/>
   <classpathentry kind="var" path="M2_REPO/jaxen/jaxen/1.0-FCS/jaxen-1.0-FCS.jar" sourcepath="M2_REPO/jaxen/jaxen/1.0-FCS/jaxen-1.0-FCS-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/net/sourceforge/jchardet/jchardet/1.0/jchardet-1.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/jdom/jdom/1.0/jdom-1.0.jar" sourcepath="M2_REPO/jdom/jdom/1.0/jdom-1.0-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/jdom/jdom/1.1/jdom-1.1.jar" sourcepath="M2_REPO/org/jdom/jdom/1.1/jdom-1.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/rhino/js/1.6R5/js-1.6R5.jar"/>
@@ -49,7 +50,9 @@
   <classpathentry kind="var" path="M2_REPO/junit/junit/4.3/junit-4.3.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/jvoicexml/jvxml/SNAPSHOT/jvxml-SNAPSHOT.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/jvoicexml/jvxml-client/SNAPSHOT/jvxml-client-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/jvoicexml/jvxml-config/SNAPSHOT/jvxml-config-SNAPSHOT.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/jvoicexml/jvxml-mrcpv2/SNAPSHOT/jvxml-mrcpv2-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/jvoicexml/jvxml-srgs/SNAPSHOT/jvxml-srgs-SNAPSHOT.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/jvoicexml/jvxml-xml/SNAPSHOT/jvxml-xml-SNAPSHOT.jar"/>
   <classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13.jar" sourcepath="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/logkit/logkit/1.0.1/logkit-1.0.1.jar"/>

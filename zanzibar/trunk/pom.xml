@@ -6,7 +6,7 @@
   <artifactId>zanzibar</artifactId>
   <packaging>jar</packaging>
   <name>Zanzibar</name>
-  <version>SNAPSHOT</version>
+  <version>0.5-SNAPSHOT</version>
   <description></description>
   <url>http://${project.artifactId}.spokentech.com</url>
   <inceptionYear>2008</inceptionYear>
@@ -79,7 +79,7 @@
 
     <directory>target</directory>
     <outputDirectory>target/classes</outputDirectory>
-    <finalName>${artifactId}-${project.version}</finalName>
+    <finalName>${project.artifactId}-${project.version}</finalName>
     <testOutputDirectory>target/test-classes</testOutputDirectory>
     <sourceDirectory>src/main/java</sourceDirectory>
     <scriptSourceDirectory>src/main/scripts</scriptSourceDirectory>
@@ -102,6 +102,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
         <configuration>
           <source>1.5</source>
           <target>1.5</target>
@@ -111,6 +112,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
+        <version>3.0-beta-3</version>
         <configuration>
           <locales>en</locales>
         </configuration>
@@ -119,6 +121,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.8</version>
         <configuration>
           <destDir>${project.build.directory}/site/docs/apidocs</destDir>
         </configuration>
@@ -127,6 +130,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.9</version>
         <configuration>
           <!--debug>true</debug-->
           <!--forkMode>once</forkMode-->
@@ -146,10 +150,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>2.9</version>
       </plugin>
 
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2.1</version>
         <configuration>
           <descriptors>
             <descriptor>settings/assembly/bin.xml</descriptor>
@@ -160,7 +166,7 @@
 
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.1</version>
+        <version>1.6</version>
         <executions>
           <execution>
             <phase>site</phase>
@@ -433,7 +439,7 @@
     <dependency>
       <groupId>rhino</groupId>
       <artifactId>js</artifactId>
-      <version>1.6R5</version>
+      <version>1.7R2</version>
       <scope>runtime</scope>
     </dependency>
     
@@ -506,12 +512,12 @@
       <scope>runtime</scope>
     </dependency>
 
-      <dependency>
-      <groupId>freetts</groupId>
-      <artifactId>cmudict</artifactId>
-      <version>04</version>
-      <scope>runtime</scope>
-    </dependency>
+     <!--include>freetts.jar</include>
+     <include>jsapi.exe</include>
+     <include>jsapi.sh</include>
+     <include>cmu_us_kal.jar</include>
+     <include>cmulex.jar</include>
+     <include>en_us.jar</include-->
     
     <!-- test scope dependencies -->
 
@@ -536,6 +542,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.4</version>
         <reportSets>
           <reportSet>
             <reports>
