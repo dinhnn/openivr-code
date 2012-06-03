@@ -219,6 +219,16 @@
 
   <repositories>
 
+    <repository>
+      <id>central</id>
+      <name>Maven Repository Switchboard</name>
+      <layout>default</layout>
+      <url>http://www.ibiblio.org/maven2</url>
+      <!--url>http://repo1.maven.org/maven2</url-->
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
 
     <repository>
       <id>speechforge-repository</id>
@@ -255,14 +265,14 @@
     <dependency>
       <groupId>org.speechforge</groupId>
       <artifactId>cairo-sip</artifactId>
-      <version>SNAPSHOT</version>
+      <version>1.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     
     <dependency>
       <groupId>org.speechforge</groupId>
       <artifactId>cairo-rtp</artifactId>
-      <version>SNAPSHOT</version>
+      <version>1.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
 
@@ -270,7 +280,7 @@
     <dependency>
       <groupId>org.speechforge</groupId>
       <artifactId>cairo-client</artifactId>
-      <version>SNAPSHOT</version>
+      <version>1.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>    
     
@@ -278,16 +288,16 @@
    <dependency>
       <groupId>org.speechforge</groupId>
       <artifactId>cairo</artifactId>
-      <version>SNAPSHOT</version>
+      <version>1.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>  
     
-    <dependency>
+    <!--dependency>
       <groupId>com.spokentech</groupId>
       <artifactId>speechcloud-client</artifactId>
       <version>SNAPSHOT</version>
       <scope>compile</scope>
-    </dependency>
+    </dependency-->
 
 
     <dependency>
@@ -361,8 +371,7 @@
     <dependency>
 	   <groupId>org.asteriskjava</groupId>
 	   <artifactId>asterisk-java</artifactId>
-           <!--version>1.0.0.M3</version-->
-	   <version>0.3</version>
+           <version>1.0.0.M3</version>
 	   <scope>compile</scope>
     </dependency>
  
